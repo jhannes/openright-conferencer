@@ -1,7 +1,8 @@
-package net.openright.simpleserverseed.domain.products;
+package net.openright.conferencer.domain.products;
 
+import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.infrastructure.rest.ResourceApi;
-import net.openright.simpleserverseed.application.SeedAppConfig;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ public class ProductsApiController implements ResourceApi {
 
     private ProductRepository repository;
 
-    public ProductsApiController(SeedAppConfig config) {
+    public ProductsApiController(ConferencerConfig config) {
         this.repository = new ProductRepository(config);
     }
 

@@ -1,11 +1,14 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
+import net.openright.conferencer.application.ConferencerServer;
+import net.openright.conferencer.application.ConferencerTestConfig;
+import net.openright.conferencer.domain.orders.Order;
+import net.openright.conferencer.domain.orders.OrdersRepository;
+import net.openright.conferencer.domain.products.Product;
+import net.openright.conferencer.domain.products.ProductRepository;
+import net.openright.conferencer.domain.products.ProductRepositoryTest;
 import net.openright.infrastructure.test.WebTestUtil;
-import net.openright.simpleserverseed.application.SeedAppServer;
-import net.openright.simpleserverseed.application.SimpleseedTestConfig;
-import net.openright.simpleserverseed.domain.products.Product;
-import net.openright.simpleserverseed.domain.products.ProductRepository;
-import net.openright.simpleserverseed.domain.products.ProductRepositoryTest;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -24,8 +27,8 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderWebTest {
-    private static SimpleseedTestConfig config = SimpleseedTestConfig.instance();
-    private static SeedAppServer server = new SeedAppServer(config);
+    private static ConferencerTestConfig config = ConferencerTestConfig.instance();
+    private static ConferencerServer server = new ConferencerServer(config);
     private static WebDriver browser;
     private static WebDriverWait wait;
     private OrdersRepository orderRepository = new OrdersRepository(config);

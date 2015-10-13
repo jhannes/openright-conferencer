@@ -1,4 +1,4 @@
-package net.openright.simpleserverseed.application;
+package net.openright.conferencer.application;
 
 import java.nio.file.Paths;
 
@@ -6,17 +6,19 @@ import javax.sql.DataSource;
 
 import org.openqa.selenium.WebDriver;
 
-public class SimpleseedTestConfig extends SeedAppConfigFile {
+import net.openright.conferencer.application.ConferencerConfigFile;
 
-    private static SimpleseedTestConfig instance;
+public class ConferencerTestConfig extends ConferencerConfigFile {
 
-    private SimpleseedTestConfig() {
-        super(Paths.get("seedapp-test.properties"));
+    private static ConferencerTestConfig instance;
+
+    private ConferencerTestConfig() {
+        super(Paths.get("conferencer-test.properties"));
     }
 
     @Override
     public DataSource createDataSource() {
-        return createTestDataSource("seed");
+        return createTestDataSource("conferencer");
     }
 
     public String getWebDriverName() {
@@ -24,9 +26,9 @@ public class SimpleseedTestConfig extends SeedAppConfigFile {
         return System.getProperty(webdriverClass, getProperty(webdriverClass, "org.openqa.selenium.chrome.ChromeDriver"));
     }
 
-    public synchronized static SimpleseedTestConfig instance() {
+    public synchronized static ConferencerTestConfig instance() {
         if (instance == null) {
-            instance = new SimpleseedTestConfig();
+            instance = new ConferencerTestConfig();
             instance.start();
         }
         return instance;

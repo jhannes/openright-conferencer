@@ -1,4 +1,4 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
 import java.util.ArrayList;
 import java.util.List;

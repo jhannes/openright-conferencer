@@ -1,11 +1,14 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
+import net.openright.conferencer.application.ConferencerConfig;
+import net.openright.conferencer.application.ConferencerTestConfig;
+import net.openright.conferencer.domain.orders.Order;
+import net.openright.conferencer.domain.orders.OrdersRepository;
+import net.openright.conferencer.domain.products.Product;
+import net.openright.conferencer.domain.products.ProductRepository;
+import net.openright.conferencer.domain.products.ProductRepositoryTest;
 import net.openright.infrastructure.test.SampleData;
-import net.openright.simpleserverseed.application.SeedAppConfig;
-import net.openright.simpleserverseed.application.SimpleseedTestConfig;
-import net.openright.simpleserverseed.domain.products.Product;
-import net.openright.simpleserverseed.domain.products.ProductRepository;
-import net.openright.simpleserverseed.domain.products.ProductRepositoryTest;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderRepositoryTest {
 
-    private SeedAppConfig config = SimpleseedTestConfig.instance();
+    private ConferencerConfig config = ConferencerTestConfig.instance();
     private OrdersRepository repository = new OrdersRepository(config);
     private ProductRepository productRepository = new ProductRepository(config);
     private Product product = ProductRepositoryTest.sampleProduct();

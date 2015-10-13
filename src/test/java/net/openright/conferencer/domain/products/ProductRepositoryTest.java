@@ -1,15 +1,18 @@
-package net.openright.simpleserverseed.domain.products;
+package net.openright.conferencer.domain.products;
 
+import net.openright.conferencer.application.ConferencerConfig;
+import net.openright.conferencer.application.ConferencerTestConfig;
+import net.openright.conferencer.domain.products.Product;
+import net.openright.conferencer.domain.products.ProductRepository;
 import net.openright.infrastructure.test.SampleData;
-import net.openright.simpleserverseed.application.SeedAppConfig;
-import net.openright.simpleserverseed.application.SimpleseedTestConfig;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductRepositoryTest {
 
-    private SeedAppConfig config = SimpleseedTestConfig.instance();
+    private ConferencerConfig config = ConferencerTestConfig.instance();
     private ProductRepository repository = new ProductRepository(config);
 
     @Test

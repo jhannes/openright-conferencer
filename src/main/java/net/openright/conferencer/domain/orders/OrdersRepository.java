@@ -1,9 +1,9 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
+import net.openright.conferencer.application.ConferencerConfig;
+import net.openright.conferencer.domain.products.ProductRepository;
 import net.openright.infrastructure.db.Database;
 import net.openright.infrastructure.rest.RequestException;
-import net.openright.simpleserverseed.application.SeedAppConfig;
-import net.openright.simpleserverseed.domain.products.ProductRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +13,7 @@ class OrdersRepository {
 
 	private final Database database;
 
-	OrdersRepository(SeedAppConfig database) {
+	OrdersRepository(ConferencerConfig database) {
 		this.database = database.getDatabase();
 	}
 

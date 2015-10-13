@@ -58,9 +58,13 @@ User - "*" Identity: authenticates with
 Demo script
 -----------
 
-1. Log in with gmail account
-2. Create a new Event
+1. Log in with a new gmail account
+  * I will see an empty list of my events
+2. Create a new event
+  * The event will be added to my list of events
 3. Add other organizers to the event
+  * The event will contain the organizers
+  * Organizers can log in to see the events
 4. Add topics to the event
 5. Add talks to the event
 6. Update status and add comments to the talks

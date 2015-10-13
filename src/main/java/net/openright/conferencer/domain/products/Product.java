@@ -1,4 +1,4 @@
-package net.openright.simpleserverseed.domain.products;
+package net.openright.conferencer.domain.products;
 
 import java.util.Objects;
 

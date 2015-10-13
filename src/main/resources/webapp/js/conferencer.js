@@ -1,11 +1,11 @@
 var ajax = {
   get : function(localUrl) {
-    return $.get('/seedapp/' + localUrl);
+    return $.get('/conferencer/' + localUrl);
   },
   post : function(localUrl, object, id) {
     if (id) localUrl += "/" + id;
     return $.ajax({
-      url : '/seedapp/' + localUrl,
+      url : '/conferencer/' + localUrl,
       type : 'POST',
       data : JSON.stringify(object),
       contentType : "application/json; charset=utf-8"

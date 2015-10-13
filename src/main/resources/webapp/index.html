@@ -46,10 +46,10 @@
 
 
 </body>
-<script src="/seedapp/vendor/jquery.js"></script>
+<script src="/conferencer/vendor/jquery.js"></script>
 <script src="vendor/foundation.min.js"></script>
-<script src="/seedapp/vendor/handlebars.min.js"></script>
-<script src="/seedapp/js/seedApp.js"></script>
+<script src="/conferencer/vendor/handlebars.min.js"></script>
+<script src="/conferencer/js/conferencer.js"></script>
 <script type="text/javascript">
 var loadingTemplate = Handlebars.compile($("#loading-template").html());
 
@@ -84,7 +84,7 @@ var displayCurrentLocation = function() {
 
   var parts = window.location.hash.substring(1).split(/\//);
 
-  var partial = "/seedapp/" + parts[0] + "/";
+  var partial = "/conferencer/" + parts[0] + "/";
   if (parts[1]) partial += ("_" + parts[1] + ".html");
 
   $.get(partial).always(function() {

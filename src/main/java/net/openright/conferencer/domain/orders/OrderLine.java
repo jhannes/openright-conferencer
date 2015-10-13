@@ -1,9 +1,9 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import net.openright.simpleserverseed.domain.products.Product;
+import net.openright.conferencer.domain.products.Product;
 
 class OrderLine {
 

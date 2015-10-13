@@ -1,9 +1,9 @@
-package net.openright.simpleserverseed.domain.products;
+package net.openright.conferencer.domain.products;
 
+import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.infrastructure.db.Database;
 import net.openright.infrastructure.db.Database.Row;
 import net.openright.infrastructure.rest.RequestException;
-import net.openright.simpleserverseed.application.SeedAppConfig;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,7 +12,7 @@ public class ProductRepository {
 
 	private final Database db;
 
-	public ProductRepository(SeedAppConfig database) {
+	public ProductRepository(ConferencerConfig database) {
 		db = database.getDatabase();
 	}
 

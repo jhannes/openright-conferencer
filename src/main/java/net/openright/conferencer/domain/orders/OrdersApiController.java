@@ -1,7 +1,8 @@
-package net.openright.simpleserverseed.domain.orders;
+package net.openright.conferencer.domain.orders;
 
+import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.infrastructure.rest.ResourceApi;
-import net.openright.simpleserverseed.application.SeedAppConfig;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ public class OrdersApiController implements ResourceApi {
 
     private OrdersRepository repository;
 
-    public OrdersApiController(SeedAppConfig config) {
+    public OrdersApiController(ConferencerConfig config) {
         this.repository = new OrdersRepository(config);
     }
 

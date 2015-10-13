@@ -9,3 +9,5 @@
 /logging-simpleserverseed.xml
 /seedapp.properties
 /seedapp-test.properties
+/conferencer.properties
+/logging-conferencer.xml
