@@ -4,7 +4,7 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.openright</groupId>
-  <artifactId>openright-simple-server-seed</artifactId>
+  <artifactId>openright-conferencer</artifactId>
   <version>1.0.0</version>
 
   <dependencies>
@@ -67,7 +67,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>1.7.1</version>
+      <version>3.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
