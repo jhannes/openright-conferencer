@@ -104,9 +104,10 @@ public class Database {
      */
     public int insert(@Nonnull String query, Object... parameters) {
         return executeDbOperation(query, Arrays.asList(parameters), stmt -> {
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            return rs.getInt("id");
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                return rs.getInt("id");
+            }
         });
     }
 

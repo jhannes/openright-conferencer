@@ -11,8 +11,6 @@ public interface ConferencerConfig {
     @Nonnull
     Database getDatabase();
 
-    void start();
-
     @Nonnull
     String getGoogleClientId();
 

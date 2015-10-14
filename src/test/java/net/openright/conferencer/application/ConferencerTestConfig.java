@@ -29,7 +29,6 @@ public class ConferencerTestConfig extends ConferencerConfigFile {
     public synchronized static ConferencerTestConfig instance() {
         if (instance == null) {
             instance = new ConferencerTestConfig();
-            instance.start();
         }
         return instance;
     }

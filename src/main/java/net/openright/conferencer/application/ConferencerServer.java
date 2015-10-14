@@ -40,8 +40,6 @@ public class ConferencerServer {
     }
 
     public void start(int port) throws Exception {
-        config.start();
-
         server = new Server(port);
         server.setHandler(createHandlers());
         server.start();
