@@ -11,10 +11,12 @@ import net.openright.conferencer.application.profile.ProfileApiController;
 import net.openright.conferencer.application.profile.UserProfile;
 import net.openright.infrastructure.rest.ApiFrontController;
 import net.openright.infrastructure.rest.Controller;
-import net.openright.infrastructure.rest.JsonResourceController;
+import net.openright.infrastructure.rest.GetJSONController;
 import net.openright.infrastructure.rest.RequestException;
 
 public class ConferencerSecureFrontServlet extends ApiFrontController {
+
+    @SuppressWarnings("unused")
     private ConferencerConfig config;
 
     @Override
@@ -45,7 +47,7 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
     @Override
     protected Controller getControllerForPath(String prefix) {
         switch (prefix) {
-            case "profile": return new JsonResourceController(new ProfileApiController(config));
+            case "profile": return new GetJSONController(new ProfileApiController());
             default: return null;
         }
     }

@@ -1,24 +1,19 @@
 package net.openright.conferencer.application;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import javax.annotation.Nonnull;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import org.eclipse.jetty.plus.jndi.EnvEntry;
 
 import net.openright.infrastructure.config.AppConfigFile;
 import net.openright.infrastructure.db.Database;
-import net.openright.infrastructure.util.ExceptionUtil;
 import net.openright.infrastructure.util.IOUtil;
 
 public class ConferencerConfigFile extends AppConfigFile implements ConferencerConfig {
 
-    private Database database;
+    private DataSource dataSource;
 
-    public ConferencerConfigFile() throws IOException {
+    public ConferencerConfigFile() {
         super(IOUtil.extractResourceFile("conferencer.properties"));
     }
 
@@ -56,19 +51,10 @@ public class ConferencerConfigFile extends AppConfigFile implements ConferencerC
     @Override
     @Nonnull
     public synchronized Database getDatabase() {
-        if (database == null) {
-            this.database = new Database("jdbc/conferencerDs");
+        if (dataSource == null) {
+            this.dataSource = createDataSource();
         }
-        return database;
+        return new Database(dataSource);
     }
 
-    @Override
-    public void start() {
-        try {
-            new EnvEntry("jdbc/conferencerDs", createDataSource());
-            new EnvEntry("seedapp/config", this);
-        } catch (NamingException e) {
-            throw ExceptionUtil.soften(e);
-        }
-    }
 }
