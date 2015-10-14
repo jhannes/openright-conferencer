@@ -11,7 +11,6 @@ public class UserProfile {
     private String accessToken;
     private String identityProvider;
 
-    @SuppressWarnings("null")
     @Nonnull
     public static UserProfile getCurrent() {
         if (current.get() == null) {
@@ -20,7 +19,7 @@ public class UserProfile {
         return current.get();
     }
 
-    public static AutoCloseable setCurrent(UserProfile currentUser) {
+    public static AutoCloseable setCurrent(@Nonnull UserProfile currentUser) {
         if (current.get() != null) {
             throw new IllegalStateException("Duplicate setting of UserProfile.current");
         }

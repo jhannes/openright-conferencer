@@ -1,5 +1,7 @@
 package net.openright.conferencer.application.profile;
 
+import javax.annotation.Nonnull;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ public class ProfileApiController implements ResourceApi {
     }
 
     @Override
+    @Nonnull
     public JSONObject listResources() {
         return new JSONObject()
                 .put("username", UserProfile.getCurrent().getEmail())

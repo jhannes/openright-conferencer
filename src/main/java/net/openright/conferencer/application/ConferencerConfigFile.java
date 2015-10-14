@@ -3,6 +3,7 @@ package net.openright.conferencer.application;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import javax.annotation.Nonnull;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
@@ -26,11 +27,13 @@ public class ConferencerConfigFile extends AppConfigFile implements ConferencerC
     }
 
     @Override
+    @Nonnull
     public String getGoogleClientId() {
         return getRequiredProperty("conferencer.google.client_id");
     }
 
     @Override
+    @Nonnull
     public String getGoogleClientSecret() {
         return getRequiredProperty("conferencer.google.client_secret");
     }
@@ -51,6 +54,7 @@ public class ConferencerConfigFile extends AppConfigFile implements ConferencerC
     }
 
     @Override
+    @Nonnull
     public synchronized Database getDatabase() {
         if (database == null) {
             this.database = new Database("jdbc/conferencerDs");

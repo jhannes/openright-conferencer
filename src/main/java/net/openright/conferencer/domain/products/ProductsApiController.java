@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+
 public class ProductsApiController implements ResourceApi {
 
     private ProductRepository repository;
@@ -19,25 +21,28 @@ public class ProductsApiController implements ResourceApi {
     }
 
     @Override
+    @Nonnull
     public JSONObject listResources() {
         return new JSONObject()
             .put("products", mapToJSON(repository.list(), this::toJSON));
     }
 
     @Override
-    public JSONObject getResource(String id) {
+    @Nonnull
+    public JSONObject getResource(@Nonnull String id) {
         return toJSON(repository.retrieve(Long.valueOf(id)));
     }
 
     @Override
-    public String createResource(JSONObject jsonObject) {
+    @Nonnull
+    public String createResource(@Nonnull JSONObject jsonObject) {
         Product product = toProduct(jsonObject);
         repository.insert(product);
         return String.valueOf(product.getId());
     }
 
     @Override
-    public void updateResource(String id, JSONObject jsonObject) {
+    public void updateResource(@Nonnull String id, JSONObject jsonObject) {
         repository.update(Long.valueOf(id), toProduct(jsonObject));
     }
 

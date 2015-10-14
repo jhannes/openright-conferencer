@@ -2,6 +2,7 @@ package net.openright.conferencer.application;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
         }
     }
 
+    @Nonnull
     private UserProfile getCurrentUser(HttpServletRequest req) {
         UserProfile userProfile = (UserProfile) req.getSession().getAttribute("userProfile");
         if (userProfile == null) {

@@ -1,9 +1,11 @@
 package net.openright.infrastructure.rest;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public abstract class ApiFrontController extends HttpServlet {
@@ -16,6 +18,7 @@ public abstract class ApiFrontController extends HttpServlet {
         }
     }
 
+    @Nonnull
     private Controller getController(HttpServletRequest req) {
         Controller defaultController = (request, res) -> super.service(request, res);
         Controller controller = getControllerForPath(req.getPathInfo().split("/")[1]);
