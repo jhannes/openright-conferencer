@@ -6,12 +6,28 @@
 	metadata-complete="false">
 
 	<servlet>
-		<servlet-name>apiFrontServlet</servlet-name>
-		<servlet-class>net.openright.conferencer.application.ConferencerFrontServlet</servlet-class>
+		<servlet-name>secureFrontServlet</servlet-name>
+		<servlet-class>net.openright.conferencer.application.ConferencerSecureFrontServlet</servlet-class>
 	</servlet>
+    <servlet>
+        <servlet-name>apiFrontServlet</servlet-name>
+        <servlet-class>net.openright.conferencer.application.ConferencerFrontServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>authServlet</servlet-name>
+        <servlet-class>net.openright.conferencer.application.AuthServlet</servlet-class>
+    </servlet>
 
+	<servlet-mapping>
+		<servlet-name>secureFrontServlet</servlet-name>
+		<url-pattern>/secure/*</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>apiFrontServlet</servlet-name>
 		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>authServlet</servlet-name>
+		<url-pattern>/auth/*</url-pattern>
 	</servlet-mapping>
 </web-app>

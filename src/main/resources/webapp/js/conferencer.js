@@ -17,8 +17,12 @@ $(document).ajaxError(function( event, jqxhr, settings, thrownError) {
   console.log( event, jqxhr, settings, thrownError);
   if (jqxhr.status >= 500) {
     notify("error", "A terrible error occurred", "We are very sorry and looking into it");
-  } else if (jqxhr.status >= 404) {
+  } else if (jqxhr.status == 401) {
+    window.location = "login.html";
+  } else if (jqxhr.status == 404) {
     notify("warning", "Not found", thrownError);
+  } else if (jqxhr.status >= 400) {
+    notify("warning", "Warning", thrownError);
   } else {
     notify("warning", "Problems", thrownError);
   }
@@ -60,3 +64,22 @@ var productRepository = {
     return ajax.post('api/products', product, product.id);
   }
 };
+
+var profile = (function() {
+  var _data;
+  function get() {
+    if (_data) {
+      return new Promise(function(resolve) { resolve(data); });
+    } else {
+      return ajax.get('secure/profile').then(function(data) {
+        _data = data;
+        return data;
+      });
+    }
+  }
+  
+  return {
+    get: get
+  }
+})();
+

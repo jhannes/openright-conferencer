@@ -1,0 +1,21 @@
+<h1>My page</h1>
+
+<div id="profilePlaceholder"></div>
+
+<script type="text/x-handlebars-template" id="profileTemplate">
+  <p>Welcome <span id="username">{{username}}</span></p>
+  <ul>
+    {{#each event}}
+    <li>Event: <a href="#" data-product="{{ id }}">{{ title }}</a></li>
+    {{/each}}
+  </ul>
+</script>
+
+<script>
+$(function() {
+	var profileTemplate = Handlebars.compile($("#profileTemplate").html());
+	profile.get().then(function(data) {
+        $("#profilePlaceholder").html(profileTemplate(data));		
+	});
+});
+</script>

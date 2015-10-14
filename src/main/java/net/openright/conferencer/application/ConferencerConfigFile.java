@@ -25,6 +25,16 @@ public class ConferencerConfigFile extends AppConfigFile implements ConferencerC
         super(configFile);
     }
 
+    @Override
+    public String getGoogleClientId() {
+        return getRequiredProperty("conferencer.google.client_id");
+    }
+
+    @Override
+    public String getGoogleClientSecret() {
+        return getRequiredProperty("conferencer.google.client_secret");
+    }
+
     protected DataSource createDataSource() {
         if (System.getenv("DATABASE_URL") != null) {
             return migrateDataSource("conferencer", createDataSourceFromEnv(System.getenv("DATABASE_URL")));

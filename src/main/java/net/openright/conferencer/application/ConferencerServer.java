@@ -12,7 +12,6 @@ import org.eclipse.jetty.server.handler.MovedContextHandler;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 
 import java.io.File;
-import java.net.URI;
 
 public class ConferencerServer {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConferencerServer.class);
@@ -53,7 +52,7 @@ public class ConferencerServer {
     private Handler createHandlers() {
         HandlerList handlers = new HandlerList();
         handlers.addHandler(new ShutdownHandler("sgds", false, true));
-        handlers.addHandler(new EmbeddedWebAppContext("/conferencer"));
+        handlers.addHandler(createWebAppContext());
         handlers.addHandler(new StatusHandler());
         handlers.addHandler(new MovedContextHandler(null, "/", "/conferencer"));
 
@@ -61,8 +60,14 @@ public class ConferencerServer {
                 ServerUtil.createRequestLogHandler(handlers));
     }
 
-    public URI getURI() {
-        return server.getURI();
+    private EmbeddedWebAppContext createWebAppContext() {
+        EmbeddedWebAppContext webAppContext = new EmbeddedWebAppContext("/conferencer");
+        webAppContext.getServletContext().setAttribute("config", config);
+        return webAppContext;
+    }
+
+    public String getURI() {
+        return "http://localhost:" + server.getURI().getPort();
     }
 
 }

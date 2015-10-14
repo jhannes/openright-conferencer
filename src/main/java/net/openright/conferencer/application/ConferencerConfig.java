@@ -9,4 +9,8 @@ public interface ConferencerConfig {
     Database getDatabase();
 
     void start();
+
+    String getGoogleClientId();
+
+    String getGoogleClientSecret();
 }

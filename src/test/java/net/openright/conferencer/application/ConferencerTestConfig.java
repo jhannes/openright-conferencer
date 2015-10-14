@@ -13,7 +13,7 @@ public class ConferencerTestConfig extends ConferencerConfigFile {
     private static ConferencerTestConfig instance;
 
     private ConferencerTestConfig() {
-        super(Paths.get("conferencer-test.properties"));
+        super(Paths.get("test-conferencer.properties"));
     }
 
     @Override
@@ -32,5 +32,13 @@ public class ConferencerTestConfig extends ConferencerConfigFile {
             instance.start();
         }
         return instance;
+    }
+
+    public String getTestUser() {
+        return getRequiredProperty("conferencer.test.user.email");
+    }
+
+    public String getTestUserPassword() {
+        return getRequiredProperty("conferencer.test.user.password");
     }
 }

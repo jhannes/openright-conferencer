@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -121,5 +122,31 @@ public class IOUtil {
 
     private static RuntimeException soften(IOException e) {
         return ExceptionUtil.soften(e);
+    }
+
+    public static void copy(String string, OutputStream out) throws IOException {
+        copy(string, new OutputStreamWriter(out, StandardCharsets.UTF_8));
+    }
+
+    public static void copy(String string, Writer out) throws IOException {
+        try (Writer writer = out) {
+            writer.write(string);
+        }
+    }
+
+    public static String toString(HttpURLConnection connection) throws IOException {
+        if (connection.getResponseCode() < 400) {
+            return toString(connection.getInputStream());
+        } else {
+            throw new RuntimeException(connection.getResponseMessage());
+        }
+    }
+
+    public static String postString(String body, String requestUrl) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection)new URL(requestUrl).openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        copy(body, connection.getOutputStream());
+        return toString(connection);
     }
 }

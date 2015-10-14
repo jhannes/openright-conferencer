@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="placeholder"></div>
+
+
+<script src="/conferencer/vendor/jquery.js"></script>
+<script>
+$(function() {
+  $.get('/conferencer/auth/provider').then(function(data) {
+    $("#placeholder").html($("<a>").text("Login with gmail").attr("href", data.provider.url));
+  });
+});
+</script>
+</body>
+</html>
