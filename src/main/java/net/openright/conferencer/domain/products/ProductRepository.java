@@ -6,6 +6,7 @@ import net.openright.infrastructure.db.Database.Row;
 import net.openright.infrastructure.rest.RequestException;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProductRepository {
@@ -17,8 +18,8 @@ public class ProductRepository {
 	}
 
 	public void insert(Product product) {
-		product.setId(db.insert("insert into products (price, active, description, title) values (?,?,?,?) returning id",
-				product.getPrice(), product.isActive(), product.getDescription(), product.getTitle()));
+		product.setId(db.insert("insert into products (price, active, description, title) values (?,?,?,?)",
+				Arrays.asList(product.getPrice(), product.isActive(), product.getDescription(), product.getTitle())));
 	}
 
 	public Product retrieve(long id) {

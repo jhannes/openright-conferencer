@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -23,7 +24,8 @@ public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
 
     public interface RowMapper<T> {
-        @Nullable T run(Row row) throws SQLException;
+        @Nullable
+        T run(Row row) throws SQLException;
     }
 
     public static class Row {
@@ -102,13 +104,14 @@ public class Database {
      *            values for the prepared statement.
      * @return the database field id from the inserted element.
      */
-    public int insert(@Nonnull String query, Object... parameters) {
-        return executeDbOperation(query, Arrays.asList(parameters), stmt -> {
-            try (ResultSet rs = stmt.executeQuery()) {
+    public long insert(String query, Collection<Object> parameterList) {
+        return executeDbOperation(query, parameterList, stmt -> {
+            stmt.execute();
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
                 rs.next();
-                return rs.getInt("id");
+                return rs.getLong(1);
             }
-        });
+        }, Statement.RETURN_GENERATED_KEYS);
     }
 
     /**
@@ -125,7 +128,12 @@ public class Database {
      */
     @Nonnull
     public <T> List<T> queryForList(String query, RowMapper<T> mapper, Object... parameters) {
-        return executeDbOperation(query, Arrays.asList(parameters), stmt -> {
+        return queryForList(query, Arrays.asList(parameters), mapper);
+    }
+
+    @Nonnull
+    public <T> List<T> queryForList(String query, List<Object> parameterList, RowMapper<T> mapper) {
+        return executeDbOperation(query, parameterList, stmt -> {
             try (ResultSet rs = stmt.executeQuery()) {
                 Row row = new Row(rs);
                 List<T> result = new ArrayList<>();
@@ -134,7 +142,7 @@ public class Database {
                 }
                 return result;
             }
-        });
+        }, Statement.NO_GENERATED_KEYS);
     }
 
     /**
@@ -153,7 +161,7 @@ public class Database {
             try (ResultSet rs = stmt.executeQuery()) {
                 return mapSingleRow(rs, mapper);
             }
-        });
+        }, Statement.NO_GENERATED_KEYS);
     }
 
     @Nonnull
@@ -175,7 +183,7 @@ public class Database {
      *            for the prepared statement.
      */
     public void executeOperation(@Nonnull String query, @Nonnull Object... parameters) {
-        executeDbOperation(query, Arrays.asList(parameters), PreparedStatement::executeUpdate);
+        executeDbOperation(query, Arrays.asList(parameters), PreparedStatement::executeUpdate, Statement.NO_GENERATED_KEYS);
     }
 
     /**
@@ -221,11 +229,11 @@ public class Database {
     }
 
     private <T> T executeDbOperation(String query, Collection<Object> parameters,
-            StatementCallback<T> statementCallback) {
+            StatementCallback<T> statementCallback, int generateKeys) {
         try {
             return doWithConnection(conn -> {
                 log.info("Executing: {} with params {}", query, parameters);
-                try (PreparedStatement prepareStatement = conn.prepareStatement(query)) {
+                try (PreparedStatement prepareStatement = conn.prepareStatement(query, generateKeys)) {
                     int index = 1;
                     for (Object object : parameters) {
                         prepareStatement.setObject(index++, object);

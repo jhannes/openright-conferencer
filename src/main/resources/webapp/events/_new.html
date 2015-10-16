@@ -1,0 +1,33 @@
+<h2>Create event</h2>
+
+<p>Enter a little information to get started with your event</p>
+
+<form onsubmit="createNewEvent(event)">
+  <div>
+    <label>Event name:
+ 	   <input type="text" name="event[title]" required placeholder="Title" />
+    </label>
+  </div>
+  <div>
+    <label>
+	    <input type="checkbox" name="event[isPublic]" />
+    	Public
+    </label>
+  </div>
+
+  <p>
+    <button>Create</button>
+  </p>
+</form>
+
+<script>
+function createNewEvent(event) {
+  event.preventDefault();
+  var form = $(event.target).serializeObject();
+  events.save(form).then(function() {
+    window.location.hash = "profile";    
+    notify("info", "Created");
+  });
+  return false;
+}
+</script>

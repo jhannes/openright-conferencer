@@ -19,7 +19,7 @@ import net.openright.infrastructure.test.WebTestUtil;
 public class ConferencerWebTest {
 
     private static ConferencerTestConfig config = ConferencerTestConfig.instance();
-    private static ConferencerServer server = new ConferencerServer(config);
+    private static ConferencerTestServer server = new ConferencerTestServer(config);
     private static WebDriver browser;
     private static WebDriverWait wait;
 
@@ -43,12 +43,13 @@ public class ConferencerWebTest {
     public void goToFrontPage() {
         browser.manage().deleteAllCookies();
         browser.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-        browser.get(server.getURI().toString());
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("nav")));
     }
 
     @Test
     public void shouldLoginWithGmail() throws Exception {
+        browser.get(server.getURI().toString());
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("nav")));
+
         browser.findElement(By.linkText("My page")).click();
         browser.findElement(By.linkText("Login with gmail")).click();
         browser.findElement(By.id("Email")).sendKeys(config.getTestUser());
@@ -63,6 +64,19 @@ public class ConferencerWebTest {
 
     @Test
     public void shouldAddEvent() throws Exception {
+        browser.get(server.getURI() + "/simulateLogin?username=" + config.getTestUser());
+
+        browser.findElement(By.linkText("My page")).click();
+        browser.findElement(By.id("newEvent")).click();
+        browser.findElement(By.name("event[title]"))
+            .sendKeys("My test event");
+        browser.findElement(By.name("event[title]"))
+            .submit();
+
+        assertThat(browser.findElements(By.cssSelector("#events .event a")))
+            .extracting(e -> e.getText())
+            .contains("My test event");
+
 
     }
 

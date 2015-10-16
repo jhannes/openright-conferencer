@@ -1,14 +1,20 @@
 var ajax = {
   get : function(localUrl) {
-    return $.get('/conferencer/' + localUrl);
+    $("#loading-overlay").fadeIn();
+    return $.get('/conferencer/' + localUrl).always(function() {
+      $("#loading-overlay").fadeOut();  
+    });
   },
   post : function(localUrl, object, id) {
     if (id) localUrl += "/" + id;
+    $("#loading-overlay").fadeIn();
     return $.ajax({
       url : '/conferencer/' + localUrl,
       type : 'POST',
       data : JSON.stringify(object),
       contentType : "application/json; charset=utf-8"
+    }).always(function() {
+      $("#loading-overlay").fadeOut();  
     });
   }
 };
@@ -66,16 +72,11 @@ var productRepository = {
 };
 
 var profile = (function() {
-  var _data;
   function get() {
-    if (_data) {
-      return new Promise(function(resolve) { resolve(data); });
-    } else {
-      return ajax.get('secure/profile').then(function(data) {
-        _data = data;
-        return data;
-      });
-    }
+    return ajax.get('secure/profile').then(function(data) {
+      _data = data;
+      return data;
+    });
   }
   
   return {
@@ -83,3 +84,12 @@ var profile = (function() {
   }
 })();
 
+var events = (function() {
+  function save(data) {
+    return ajax.post('secure/events', data);
+  }
+  
+  return {
+    save: save
+  };
+})();

@@ -7,7 +7,7 @@ import java.util.Objects;
 class Order {
 
     private String title;
-    private Integer id;
+    private Long id;
     private List<OrderLine> orderLines = new ArrayList<>();
 
     Order(String title) {
@@ -27,11 +27,11 @@ class Order {
         return this;
     }
 
-    void setId(int id) {
+    void setId(long id) {
         this.id = id;
     }
 
-    int getId() {
+    long getId() {
         return id;
     }
 

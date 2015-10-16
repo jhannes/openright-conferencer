@@ -7,16 +7,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.openright.conferencer.application.profile.ProfileApiController;
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.events.EventApiController;
 import net.openright.infrastructure.rest.ApiFrontController;
 import net.openright.infrastructure.rest.Controller;
 import net.openright.infrastructure.rest.GetJSONController;
+import net.openright.infrastructure.rest.JsonResourceController;
 import net.openright.infrastructure.rest.RequestException;
 
 public class ConferencerSecureFrontServlet extends ApiFrontController {
 
-    @SuppressWarnings("unused")
+    private static Logger log = LoggerFactory.getLogger(ConferencerSecureFrontServlet.class);
+
     private ConferencerConfig config;
 
     @Override
@@ -29,8 +35,10 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
         try (AutoCloseable context = UserProfile.setCurrent(getCurrentUser(req))) {
             super.service(req, resp);
         } catch (RequestException e) {
+            log.info("Request failed {}: {}", req.getRequestURL(), e.toString());
             resp.sendError(e.getStatusCode(), e.getMessage());
         } catch (Exception e) {
+            log.error("Request failed {}", req.getRequestURL(), e);
             resp.sendError(500, e.toString());
         }
     }
@@ -47,7 +55,8 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
     @Override
     protected Controller getControllerForPath(String prefix) {
         switch (prefix) {
-            case "profile": return new GetJSONController(new ProfileApiController());
+            case "profile": return new GetJSONController(new ProfileApiController(config));
+            case "events": return new JsonResourceController(new EventApiController(config));
             default: return null;
         }
     }

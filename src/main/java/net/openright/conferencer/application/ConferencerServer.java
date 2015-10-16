@@ -35,7 +35,7 @@ public class ConferencerServer {
         }
     }
 
-    private void start() throws Exception {
+    protected void start() throws Exception {
         start(config.getHttpPort());
     }
 
@@ -58,7 +58,7 @@ public class ConferencerServer {
                 ServerUtil.createRequestLogHandler(handlers));
     }
 
-    private EmbeddedWebAppContext createWebAppContext() {
+    protected EmbeddedWebAppContext createWebAppContext() {
         EmbeddedWebAppContext webAppContext = new EmbeddedWebAppContext("/conferencer");
         webAppContext.getServletContext().setAttribute("config", config);
         return webAppContext;

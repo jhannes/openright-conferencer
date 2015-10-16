@@ -4,14 +4,23 @@
 
 <script type="text/x-handlebars-template" id="profileTemplate">
   <p>Welcome <span id="username">{{username}}</span></p>
-  <ul>
-    {{#each event}}
-    <li>Event: <a href="#" data-product="{{ id }}">{{ title }}</a></li>
+
+  <h2>Your events</h2>
+  <ul id="events">
+    {{#each events}}
+    <li class="event">Event: <a href="#" data-product="{{ id }}">{{ title }}</a></li>
     {{/each}}
   </ul>
+
+  <button id="newEvent" onclick="newEvent(event)">Create Event</button>
 </script>
 
 <script>
+function newEvent(event) {
+  window.location.hash = "events/new";
+  return false;
+}
+
 $(function() {
 	var profileTemplate = Handlebars.compile($("#profileTemplate").html());
 	profile.get().then(function(data) {
