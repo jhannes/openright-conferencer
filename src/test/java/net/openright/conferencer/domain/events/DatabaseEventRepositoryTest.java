@@ -1,6 +1,8 @@
 package net.openright.conferencer.domain.events;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
 import org.junit.Test;
 
 import net.openright.conferencer.application.ConferencerConfig;
@@ -118,4 +120,46 @@ public class DatabaseEventRepositoryTest {
         }
     }
 
+    @Test
+    public void shouldAddTopics() throws Exception {
+        try (AutoCloseable ignore = userProfile.setAsCurrent()) {
+            Event event = SampleData.sampleEvent();
+            eventRepository.insert(event);
+
+            event.setTopics(Arrays.asList(
+                    EventTopic.unsaved("some topic"), EventTopic.unsaved("other topic")));
+
+            eventRepository.update(event);
+
+            assertThat(eventRepository.retrieve(event.getSlug()).get().getTopics())
+                .extracting(EventTopic::getTitle)
+                .containsExactly("some topic", "other topic");
+        }
+    }
+
+    @Test
+    public void shouldUpdateTopics() throws Exception {
+        try (AutoCloseable ignore = userProfile.setAsCurrent()) {
+            Event event = SampleData.sampleEvent();
+            eventRepository.insert(event);
+
+            event.setTopics(Arrays.asList(
+                    EventTopic.unsaved("old 1"),
+                    EventTopic.unsaved("old 2"),
+                    EventTopic.unsaved("old 3")));
+            eventRepository.update(event);
+
+            Event event2 = eventRepository.retrieve(event.getSlug()).get();
+            event2.setTopics(Arrays.asList(
+                    EventTopic.unsaved("new 1"),
+                    EventTopic.unsaved("new 2"),
+                    EventTopic.existing(event2.getTopics().get(1).getId()),
+                    EventTopic.existing(event2.getTopics().get(0).getId())));
+
+            eventRepository.update(event2);
+            assertThat(eventRepository.retrieve(event.getSlug()).get().getTopics())
+                .extracting(EventTopic::getTitle)
+                .containsExactly("new 1", "new 2", "old 2", "old 1");
+        }
+    }
 }

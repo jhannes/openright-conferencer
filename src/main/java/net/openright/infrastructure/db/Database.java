@@ -191,8 +191,8 @@ public class Database {
         executeDbOperation(query, Arrays.asList(parameters));
     }
 
-    public Integer executeDbOperation(String query, List<Object> parameters) {
-        return executeDbOperation(query, parameters, PreparedStatement::executeUpdate, Statement.NO_GENERATED_KEYS);
+    public Integer executeDbOperation(String query, Collection<Object> collection) {
+        return executeDbOperation(query, collection, PreparedStatement::executeUpdate, Statement.NO_GENERATED_KEYS);
     }
 
     /**
@@ -252,6 +252,7 @@ public class Database {
                 }
             });
         } catch (SQLException e) {
+            log.info("Error while executing {} {}", query, e);
             throw handleException(e);
         }
     }

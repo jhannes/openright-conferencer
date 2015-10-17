@@ -9,7 +9,22 @@
 
   <p>Let's do some modifications</p>
 
-  <h3>Add collaborators</h3>
+  <h3>Topics</h3>
+
+  <ul id="event_topics">
+    {{#each topics}}
+      <li class="event_topic">
+		<input type="hidden" name="event[topics][][id]" value="{{id}}" />
+		<input type="hidden" name="event[topics][][title]" value="{{title}}" />
+		{{title}}
+		<button onclick="eventView.removeTopic(event)">Remove</button>
+      </li>
+    {{/each}}
+  </ul>
+
+  <button onclick="eventView.addTopic(event)">Add topic</button>
+
+  <h3>Collaborators</h3>
 
   <label>
     Email:
@@ -23,9 +38,27 @@
 </form>
 </script>
 
+<script id="newTopicTemplate" type="template">
+	<li>
+		<input type="text" name="event[topics][][title]" />
+    </li>
+</script>
 
 
 <script>
+var eventView = {
+    addTopic: function(event) {
+      event.preventDefault();
+      $("#event_topics").append($("#newTopicTemplate").html());
+      return false;
+    },
+    removeTopic: function(event) {
+      event.preventDefault();
+      $(event.target).closest(".event_topic").remove();
+      return false;
+    }
+};
+
 function updateEvent(event) {
   event.preventDefault();
   var form = $(event.target).serializeObject();

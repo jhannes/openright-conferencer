@@ -2,7 +2,10 @@ package net.openright.conferencer.domain.events;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -15,10 +18,12 @@ public class DatabaseEventRepository implements EventRepository {
     private final DatabaseTable eventsTable;
     private final DatabaseTable eventsCollaboratorTable;
     private Database database;
+    private DatabaseTable eventTopicsTable;
 
     public DatabaseEventRepository(Database database) {
         this.database = database;
         this.eventsTable = new DatabaseTable(database, "events");
+        this.eventTopicsTable = new DatabaseTable(database, "event_topics");
         this.eventsCollaboratorTable = new DatabaseTable(database, "event_collaborators");
     }
 
@@ -36,7 +41,15 @@ public class DatabaseEventRepository implements EventRepository {
                 .where("collaborator_email", UserProfile.getCurrent().getEmail())
                 .single(this::toEvent);
         event.ifPresent(e -> e.getCollaborators().addAll(listCollaborators(e.getId())));
+        event.ifPresent(e -> e.getTopics().addAll(listTopics(e.getId())));
         return event;
+    }
+
+    private Collection<? extends EventTopic> listTopics(Long id) {
+        return eventTopicsTable
+                .where("event_id", id)
+                .orderBy("position")
+                .list(row -> new EventTopic(row.getLong("id"), row.getString("title")));
     }
 
     @Override
@@ -65,6 +78,50 @@ public class DatabaseEventRepository implements EventRepository {
     @Override
     public void update(@Nonnull Event event) {
         updateCollaborators(event);
+        updateTopics(event);
+    }
+
+    private void updateTopics(Event event) {
+        deleteTopics(event.getId(), event.getTopics());
+        updateTopicPositions(event.getTopics());
+        insertTopics(event.getId(), event.getTopics());
+    }
+
+    private void updateTopicPositions(List<EventTopic> topics) {
+        for (int i = 0; i < topics.size(); i++) {
+            int position = i;
+            EventTopic eventTopic = topics.get(i);
+            if (eventTopic.getId() != null) {
+                eventTopicsTable.where("id", eventTopic.getId())
+                    .update(row -> row.put("position", position));
+            }
+        }
+    }
+
+    private void deleteTopics(Long id, List<EventTopic> topics) {
+        Set<Long> preservedTopicIds = topics.stream()
+                .map(EventTopic::getId)
+                .filter(topicId -> topicId != null)
+                .collect(Collectors.toSet());
+        if (!preservedTopicIds.isEmpty()) {
+            eventTopicsTable.where("event_id", id)
+                .whereNotIn("id", preservedTopicIds)
+                .delete();
+        }
+    }
+
+    private void insertTopics(Long id, List<EventTopic> topics) {
+        for (int i = 0; i < topics.size(); i++) {
+            int position = i;
+            EventTopic topic = topics.get(i);
+            if (topic.getId() == null) {
+                eventTopicsTable.insert(row -> {
+                   row.put("event_id", id);
+                   row.put("title", topic.getTitle());
+                   row.put("position", position);
+                });
+            }
+        }
     }
 
     @Nonnull
