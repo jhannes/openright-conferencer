@@ -58,6 +58,10 @@ public class Database {
             return timestamp != null ? timestamp.toInstant() : null;
         }
 
+        public Long getLong(String columnName) throws SQLException {
+            return rs.getLong(columnName);
+        }
+
         public long getLong(String tableName, String columnName) throws SQLException {
             return rs.getLong(getColumnIndex(tableName, columnName));
         }
@@ -78,6 +82,7 @@ public class Database {
         private int getColumnIndex(String tableName, String columnName) {
             return columnMap.get(tableName + "." + columnName);
         }
+
     }
 
     private final DataSource dataSource;
@@ -156,7 +161,7 @@ public class Database {
      *            definition for mapping fields to the returned object.
      * @return database result mapped to class.
      */
-    private <T> Optional<T> queryForSingle(String query, Collection<Object> parameters, RowMapper<T> mapper) {
+    public <T> Optional<T> queryForSingle(String query, Collection<Object> parameters, RowMapper<T> mapper) {
         return executeDbOperation(query, parameters, stmt -> {
             try (ResultSet rs = stmt.executeQuery()) {
                 return mapSingleRow(rs, mapper);
@@ -183,7 +188,11 @@ public class Database {
      *            for the prepared statement.
      */
     public void executeOperation(@Nonnull String query, @Nonnull Object... parameters) {
-        executeDbOperation(query, Arrays.asList(parameters), PreparedStatement::executeUpdate, Statement.NO_GENERATED_KEYS);
+        executeDbOperation(query, Arrays.asList(parameters));
+    }
+
+    public Integer executeDbOperation(String query, List<Object> parameters) {
+        return executeDbOperation(query, parameters, PreparedStatement::executeUpdate, Statement.NO_GENERATED_KEYS);
     }
 
     /**
@@ -206,7 +215,7 @@ public class Database {
                 threadConnection.set(null);
             }
         } catch (SQLException e) {
-            throw handleException(null, e);
+            throw handleException(e);
         }
     }
 
@@ -243,11 +252,11 @@ public class Database {
                 }
             });
         } catch (SQLException e) {
-            throw handleException(query, e);
+            throw handleException(e);
         }
     }
 
-    private RuntimeException handleException(String query, SQLException e) {
+    private RuntimeException handleException(SQLException e) {
         return ExceptionUtil.soften(e);
     }
 

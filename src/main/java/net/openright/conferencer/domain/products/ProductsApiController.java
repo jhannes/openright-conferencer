@@ -1,16 +1,17 @@
 package net.openright.conferencer.domain.products;
 
-import net.openright.conferencer.application.ConferencerConfig;
-import net.openright.infrastructure.rest.ResourceApi;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import net.openright.conferencer.application.ConferencerConfig;
+import net.openright.infrastructure.rest.ResourceApi;
 
 public class ProductsApiController implements ResourceApi {
 
@@ -29,8 +30,8 @@ public class ProductsApiController implements ResourceApi {
 
     @Override
     @Nonnull
-    public JSONObject getResource(@Nonnull String id) {
-        return toJSON(repository.retrieve(Long.valueOf(id)));
+    public Optional<JSONObject> getResource(@Nonnull String id) {
+        return Optional.of(toJSON(repository.retrieve(Long.valueOf(id))));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ProductsApiController implements ResourceApi {
     }
 
     @Override
-    public void updateResource(@Nonnull String id, JSONObject jsonObject) {
+    public void updateResource(@Nonnull String id, @Nonnull JSONObject jsonObject) {
         repository.update(Long.valueOf(id), toProduct(jsonObject));
     }
 

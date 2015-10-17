@@ -21,7 +21,7 @@ public class ConferencerTestServer extends ConferencerServer {
             UserProfile userProfile = new UserProfile();
             userProfile.setEmail(req.getParameter("username"));
             req.getSession().setAttribute("userProfile", userProfile);
-            resp.sendRedirect(req.getContextPath());
+            resp.sendRedirect(req.getContextPath() + "/#profile");
         }
 
     }

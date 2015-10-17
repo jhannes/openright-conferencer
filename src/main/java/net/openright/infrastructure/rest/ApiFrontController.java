@@ -26,8 +26,8 @@ public abstract class ApiFrontController extends HttpServlet {
             resp.sendError(e.getStatusCode(), e.getMessage());
         } finally {
             long duration = System.currentTimeMillis() - startTime;
-            log.info("COMPLETE {} {} in {}ms for {}",
-                    req.getMethod(), new RequestUrl(req), duration, req.getRemoteHost());
+            log.info("{} {} {} in {}ms for {}",
+                    resp.getStatus(), req.getMethod(), new RequestUrl(req), duration, req.getRemoteHost());
         }
     }
 

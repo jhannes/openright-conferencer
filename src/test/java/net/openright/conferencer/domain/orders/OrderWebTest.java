@@ -63,6 +63,7 @@ public class OrderWebTest {
         Order order = OrderRepositoryTest.sampleOrder();
         orderRepository.insert(order);
         browser.get(server.getURI().toString());
+        click(By.linkText("Orders"));
 
         List<String> orders = browser.findElement(By.id("ordersList"))
             .findElements(By.tagName("li"))
@@ -85,9 +86,8 @@ public class OrderWebTest {
     public void shouldAddProduct() throws Exception {
         Product newProduct = ProductRepositoryTest.sampleProduct();
 
-        browser.findElement(By.linkText("Products")).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("addProduct")));
-        browser.findElement(By.id("addProduct")).click();
+        click(By.linkText("Products"));
+        click(By.id("addProduct"));
 
         WebElement titleField = browser.findElement(By.name("product[title]"));
         titleField.clear();
@@ -107,14 +107,19 @@ public class OrderWebTest {
             .isEqualToIgnoringGivenFields(newProduct, "id");
     }
 
+    public void click(By by) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")));
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+        browser.findElement(by).click();
+    }
+
     @Test
     public void shouldEditProduct() throws Exception {
         Product product = ProductRepositoryTest.sampleProduct();
         productRepository.insert(product);
 
-        browser.findElement(By.linkText("Products")).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("addProduct")));
-        browser.findElement(By.linkText(product.getTitle())).click();
+        click(By.linkText("Products"));
+        click(By.linkText(product.getTitle()));
 
         WebElement titleField = browser.findElement(By.name("product[title]"));
         titleField.clear();
@@ -131,7 +136,8 @@ public class OrderWebTest {
         Product product = ProductRepositoryTest.sampleProduct();
         productRepository.insert(product);
 
-        browser.findElement(By.id("addOrder")).click();
+        click(By.linkText("Orders"));
+        click(By.id("addOrder"));
 
         String orderTitle = OrderRepositoryTest.sampleOrder().getTitle();
 
@@ -139,7 +145,7 @@ public class OrderWebTest {
         titleField.clear();
         titleField.sendKeys(orderTitle);
 
-        browser.findElement(By.id("addOrderLine")).click();
+        click(By.id("addOrderLine"));
 
         browser.findElement(By.cssSelector("#orderLines .productSelect"))
             .findElement(optionWithText(product.getTitle()))
@@ -167,12 +173,12 @@ public class OrderWebTest {
         order.addOrderLine(product.getId(), 100);
         orderRepository.insert(order);
 
-        browser.get(server.getURI().toString() + "#orders/edit/" + order.getId());
+        browser.get(server.getURI().toString() + "#orders/" + order.getId() + "/edit");
 
         WebElement titleField = browser.findElement(By.name("order[title]"));
         assertThat(titleField.getAttribute("value")).isEqualTo(order.getTitle());
 
-        browser.findElement(By.className("deleteOrderLine")).click();
+        click(By.className("deleteOrderLine"));
 
         WebElement amountField = browser.findElement(By.name("order[orderlines][][amount]"));
         assertThat(amountField.getAttribute("value")).isEqualTo("100");

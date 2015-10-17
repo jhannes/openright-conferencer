@@ -5,6 +5,17 @@ var ajax = {
       $("#loading-overlay").fadeOut();  
     });
   },
+  put: function(localUrl, object) {
+    $("#loading-overlay").fadeIn();
+    return $.ajax({
+      url : '/conferencer/' + localUrl,
+      type : 'PUT',
+      data : JSON.stringify(object),
+      contentType : "application/json; charset=utf-8"
+    }).always(function() {
+      $("#loading-overlay").fadeOut();  
+    });    
+  },
   post : function(localUrl, object, id) {
     if (id) localUrl += "/" + id;
     $("#loading-overlay").fadeIn();
@@ -85,11 +96,21 @@ var profile = (function() {
 })();
 
 var events = (function() {
+  function get(slug) {
+    return ajax.get('secure/events/' + slug);
+  }
+  
   function save(data) {
     return ajax.post('secure/events', data);
   }
   
+  function update(data) {
+    return ajax.put('secure/events/' + data.event.slug, data);
+  }
+  
   return {
-    save: save
+    save: save,
+    get: get,
+    update: update
   };
 })();

@@ -14,6 +14,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.events.DatabaseEventRepository;
+import net.openright.conferencer.domain.events.Event;
+import net.openright.conferencer.domain.events.EventRepository;
+import net.openright.infrastructure.test.SampleData;
 import net.openright.infrastructure.test.WebTestUtil;
 
 public class ConferencerWebTest {
@@ -50,7 +55,7 @@ public class ConferencerWebTest {
         browser.get(server.getURI().toString());
         wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("nav")));
 
-        browser.findElement(By.linkText("My page")).click();
+        click(By.linkText("My page"));
         browser.findElement(By.linkText("Login with gmail")).click();
         browser.findElement(By.id("Email")).sendKeys(config.getTestUser());
         browser.findElement(By.id("next")).click();
@@ -63,11 +68,32 @@ public class ConferencerWebTest {
     }
 
     @Test
+    public void shouldAddContributorToEvent() throws Exception {
+        EventRepository repository = new DatabaseEventRepository(config.getDatabase());
+        UserProfile creator = SampleData.sampleProfile();
+        Event event = SampleData.sampleEvent();
+        try (AutoCloseable ignore = creator.setAsCurrent()) {
+            repository.insert(event);
+        }
+
+        browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
+        click(By.linkText(event.getTitle()));
+        UserProfile collaborator = SampleData.sampleProfile();
+        browser.findElement(By.name("event[collaborators][][email]")).sendKeys(collaborator.getEmail());
+        browser.findElement(By.name("event[collaborators][][email]")).submit();
+
+        browser.manage().deleteAllCookies();
+        browser.get(server.getURI() + "/simulateLogin?username=" + collaborator.getEmail());
+        assertThat(browser.findElements(By.cssSelector("#events .event a")))
+            .extracting(e -> e.getText())
+            .contains(event.getTitle());
+    }
+
+    @Test
     public void shouldAddEvent() throws Exception {
         browser.get(server.getURI() + "/simulateLogin?username=" + config.getTestUser());
 
-        browser.findElement(By.linkText("My page")).click();
-        browser.findElement(By.id("newEvent")).click();
+        click(By.id("newEvent"));
         browser.findElement(By.name("event[title]"))
             .sendKeys("My test event");
         browser.findElement(By.name("event[title]"))
@@ -76,8 +102,11 @@ public class ConferencerWebTest {
         assertThat(browser.findElements(By.cssSelector("#events .event a")))
             .extracting(e -> e.getText())
             .contains("My test event");
+    }
 
-
+    private void click(By by) {
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+        browser.findElement(by).click();
     }
 
 }

@@ -32,7 +32,7 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (AutoCloseable context = UserProfile.setCurrent(getCurrentUser(req))) {
+        try (AutoCloseable context = getCurrentUser(req).setAsCurrent()) {
             super.service(req, resp);
         } catch (RequestException e) {
             log.info("Request failed {}: {}", req.getRequestURL(), e.toString());

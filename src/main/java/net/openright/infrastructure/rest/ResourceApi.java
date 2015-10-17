@@ -1,10 +1,13 @@
 package net.openright.infrastructure.rest;
 
+import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Tainted;
 
 import org.json.JSONObject;
 
+@SuppressWarnings("unused")
 public interface ResourceApi {
 
     @Nonnull
@@ -13,11 +16,11 @@ public interface ResourceApi {
     }
 
     @Nonnull
-    default JSONObject getResource(@Nonnull @Tainted String id) {
+    default Optional<JSONObject> getResource(@Nonnull @Tainted String id) {
         throw new UnsupportedOperationException();
     }
 
-    default void updateResource(@Nonnull @Tainted String id, JSONObject jsonObject) {
+    default void updateResource(@Nonnull @Tainted String id, @Nonnull JSONObject jsonObject) {
         throw new UnsupportedOperationException();
     }
 

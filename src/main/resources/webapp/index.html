@@ -33,7 +33,6 @@
       
   
       <section id="content">
-        Loading contents...
       </section>
     </div>
   </div>
@@ -63,10 +62,9 @@ $(document).foundation();
 
 $(function() {
     $(window).bind('hashchange', displayCurrentLocation);
-    if (!window.location.hash) {
-        window.location.hash = "orders";
+    if (window.location.hash) {
+      displayCurrentLocation();
     }
-    displayCurrentLocation();
 
     $('#notifications').on('click', '.notify', function() {
       $(this).slideUp(350, function() {
@@ -77,8 +75,8 @@ $(function() {
 
 var currentId = function() {
   var parts = window.location.hash.substring(1).split(/\//);
-  if (parts[2] && parts[2].match(/\d+/)) {
-    return parts[2];
+  if (parts[1] && parts[1].match(/\d+/)) {
+    return parts[1];
   } else {
     return null;
   }
@@ -91,7 +89,11 @@ var displayCurrentLocation = function() {
   var parts = window.location.hash.substring(1).split(/\//);
 
   var partial = "/conferencer/" + parts[0] + "/";
-  if (parts[1]) partial += ("_" + parts[1] + ".html");
+  if (parts[2]) {
+    partial += ("_" + parts[2] + ".html");
+  } else if (parts[1]) {
+    partial += ("_" + parts[1] + ".html");
+  }
 
   $.get(partial).always(function() {
     $("#content").empty();

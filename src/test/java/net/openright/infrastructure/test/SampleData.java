@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.events.Event;
 
 public class SampleData {
 
@@ -36,8 +37,15 @@ public class SampleData {
         return profile;
     }
 
-    private static String randomEmail() {
-        return sampleWord() + "@" + sampleWord() + ".com";
+    public static String randomEmail() {
+        return sampleWord() + "." + sampleWord() + "@" + sampleWord() + ".com";
+    }
+
+    public static Event sampleEvent() {
+        Event event = new Event();
+        event.setTitle(sampleString(4));
+        event.setSlug(sampleWord() + "-" + sampleWord() + "-" + random.nextInt(1000));
+        return event;
     }
 
 }

@@ -1,16 +1,21 @@
 package net.openright.conferencer.domain.events;
 
 import java.util.Collection;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
-
-import net.openright.conferencer.application.profile.UserProfile;
 
 public interface EventRepository {
 
-    long save(@Nonnull Event event);
+    long insert(@Nonnull Event event);
 
     @Nonnull
-    Collection<Event> list(@Nonnull UserProfile current);
+    Collection<Event> list();
+
+    @Nonnull
+    Optional<Event> retrieve(String slug);
+
+    void update(@Nonnull Event event);
+
+    void doInTransaction(@Nonnull Runnable object);
 
 }

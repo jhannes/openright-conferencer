@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,8 +23,8 @@ public class OrdersApiController implements ResourceApi {
 
     @Override
     @Nonnull
-    public JSONObject getResource(@Nonnull String id) {
-        return toJSON(repository.retrieve(Integer.parseInt(id)));
+    public Optional<JSONObject> getResource(@Nonnull String id) {
+        return Optional.of(toJSON(repository.retrieve(Integer.parseInt(id))));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class OrdersApiController implements ResourceApi {
     }
 
     @Override
-    public void updateResource(@Nonnull String id, JSONObject jsonObject) {
+    public void updateResource(@Nonnull String id, @Nonnull JSONObject jsonObject) {
         repository.update(Integer.parseInt(id), toOrder(jsonObject));
     }
 

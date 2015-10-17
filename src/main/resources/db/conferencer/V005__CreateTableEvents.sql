@@ -1,6 +1,9 @@
 create table Events (
 	id serial primary key,
-	title text NOT NULL,
-	creator text NULL
+	slug varchar(30) not null unique,
+	title text not null,
+	creator varchar(100) not null,
+	created_at timestamp,
+	updated_at timestamp
 );
 

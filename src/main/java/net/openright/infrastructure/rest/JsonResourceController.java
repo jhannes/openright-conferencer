@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Optional;
 
 public class JsonResourceController implements Controller {
     private final ResourceApi resourceApi;
@@ -44,7 +45,7 @@ public class JsonResourceController implements Controller {
         if (id != null) {
             sendResponse(resp, resourceApi.getResource(id));
         } else {
-            sendResponse(resp, resourceApi.listResources());
+            sendResponse(resp, Optional.of(resourceApi.listResources()));
         }
     }
 
@@ -61,15 +62,15 @@ public class JsonResourceController implements Controller {
         }
     }
 
-    private void sendResponse(HttpServletResponse resp, JSONObject response) throws IOException {
+    private void sendResponse(HttpServletResponse resp, Optional<JSONObject> optional) throws IOException {
         resp.setHeader("Expires", "-1");
-        if (response == null) {
+        if (!optional.isPresent()) {
             resp.setStatus(204);
             return;
         }
         resp.setContentType("application/json");
         try (Writer writer = resp.getWriter()) {
-            writer.write(response.toString());
+            writer.write(optional.get().toString());
         }
     }
 

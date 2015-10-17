@@ -23,11 +23,11 @@ $(function() {
 
     $("#ordersList").on("click", "a", function(e) {
         e.preventDefault();
-        window.location.hash = "orders/edit/" + $(e.target).data("order");
+        window.location.hash = "orders/" + $(e.target).data("order") + "/edit";
     });
 
     $("#addOrder").click(function() {
-        window.location.hash = "orders/edit/new";
+        window.location.hash = "orders/new/edit";
     });
 });
 </script>

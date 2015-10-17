@@ -1,5 +1,6 @@
 package net.openright.conferencer.application.profile;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
 import net.openright.infrastructure.rest.RequestException;
@@ -19,11 +20,13 @@ public class UserProfile {
         return current.get();
     }
 
-    public static AutoCloseable setCurrent(@Nonnull UserProfile currentUser) {
+    @Nonnull
+    @CheckReturnValue
+    public AutoCloseable setAsCurrent() {
         if (current.get() != null) {
             throw new IllegalStateException("Duplicate setting of UserProfile.current");
         }
-        current.set(currentUser);
+        current.set(this);
         return () -> current.remove();
     }
 

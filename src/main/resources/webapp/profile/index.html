@@ -8,7 +8,7 @@
   <h2>Your events</h2>
   <ul id="events">
     {{#each events}}
-    <li class="event">Event: <a href="#" data-product="{{ id }}">{{ title }}</a></li>
+    <li class="event">Event: <a href="#events/{{slug}}/edit">{{ title }}</a></li>
     {{/each}}
   </ul>
 
