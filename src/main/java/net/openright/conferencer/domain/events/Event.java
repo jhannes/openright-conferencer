@@ -19,7 +19,7 @@ import net.openright.conferencer.application.profile.UserProfile;
 @EqualsAndHashCode(of={"id", "slug", "title"})
 public class Event {
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
@@ -40,6 +40,7 @@ public class Event {
 
     public JSONObject toJSON() {
         return new JSONObject()
+                .put("id", id)
                 .put("title", title)
                 .put("slug", slug)
                 .put("topics", new JSONArray(getTopicsJSON()));

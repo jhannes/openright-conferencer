@@ -1,0 +1,51 @@
+
+<div id="eventPlaceholder"></div>
+
+
+<script id="eventTemplate" type="template">
+{{#with event}}
+  <h2>{{title}}</h2>
+
+  <a href="#events/{{slug}}/edit" class="button">
+    Update
+  </a>
+
+  <h3>Topics</h3>
+
+  <ul id="event_topics">
+    {{#each topics}}
+      <li class="event_topic">
+		{{title}}
+      </li>
+    {{/each}}
+  </ul>
+
+  {{#with @root.talks}}
+  <h3>Talks</h3>
+
+  <ul id="event_talks">
+    {{#each .}}
+      <li class="event_talk">
+		{{title}}
+      </li>
+    {{/each}}
+  </ul>
+  {{/with}}
+
+  <a href="#events/{{slug}}/talks/_new" class="button">
+    Add talk
+  </a>
+{{/with}}
+</script>
+
+
+<script>
+$(function() {
+  	var slug = currentId();
+  
+	var eventTemplate = Handlebars.compile($("#eventTemplate").html());
+	events.get(slug).then(function(data) {
+  		$("#eventPlaceholder").html(eventTemplate(data));
+	});
+});
+</script>

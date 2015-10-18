@@ -6,6 +6,7 @@ import java.util.Random;
 
 import net.openright.conferencer.application.profile.UserProfile;
 import net.openright.conferencer.domain.events.Event;
+import net.openright.conferencer.domain.talks.Talk;
 
 public class SampleData {
 
@@ -46,6 +47,13 @@ public class SampleData {
         event.setTitle(sampleString(4));
         event.setSlug(sampleWord() + "-" + sampleWord() + "-" + random.nextInt(1000));
         return event;
+    }
+
+    public static Talk sampleTalk(Event event) {
+        Talk talk = new Talk();
+        talk.setTitle("A talk about " + sampleString(4));
+        talk.setEventId(event.getId());
+        return talk;
     }
 
 }

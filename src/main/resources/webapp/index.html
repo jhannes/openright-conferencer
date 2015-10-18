@@ -75,7 +75,7 @@ $(function() {
 
 var currentId = function() {
   var parts = window.location.hash.substring(1).split(/\//);
-  if (parts[1] && parts[1].match(/\d+/)) {
+  if (parts[1] && !parts[1][0] != '_new') {
     return parts[1];
   } else {
     return null;
@@ -89,10 +89,14 @@ var displayCurrentLocation = function() {
   var parts = window.location.hash.substring(1).split(/\//);
 
   var partial = "/conferencer/" + parts[0] + "/";
-  if (parts[2]) {
+  if (parts[3]) {
+    partial += parts[2] + "/" + parts[3] + ".html";
+  } else if (parts[2]) {
     partial += ("_" + parts[2] + ".html");
+  } else if (parts[1] && parts[1][0] === "_") {
+    partial += (parts[1] + ".html");
   } else if (parts[1]) {
-    partial += ("_" + parts[1] + ".html");
+    partial += ("_show.html");
   }
 
   $.get(partial).always(function() {

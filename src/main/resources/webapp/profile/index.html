@@ -8,11 +8,14 @@
   <h2>Your events</h2>
   <ul id="events">
     {{#each events}}
-    <li class="event">Event: <a href="#events/{{slug}}/edit">{{ title }}</a></li>
+    <li class="event">
+		<a href="#events/{{slug}}">{{title}}</a>
+		[<a href="#events/{{slug}}/edit">update</a>]
+	</li>
     {{/each}}
   </ul>
 
-  <button id="newEvent" onclick="newEvent(event)">Create Event</button>
+  <a href="#events/_new" class="button">Create Event</a>
 </script>
 
 <script>

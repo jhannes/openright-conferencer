@@ -1,9 +1,11 @@
 package net.openright.conferencer.domain.events;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -12,21 +14,35 @@ import org.json.JSONObject;
 
 import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.talks.DatabaseTalkRepository;
+import net.openright.conferencer.domain.talks.Talk;
+import net.openright.conferencer.domain.talks.TalkRepository;
 import net.openright.infrastructure.rest.RequestException;
 import net.openright.infrastructure.rest.ResourceApi;
 
 public class EventApiController implements ResourceApi {
 
     private EventRepository eventRepository;
+    private TalkRepository talkRepository;
 
     public EventApiController(ConferencerConfig config) {
         eventRepository = new DatabaseEventRepository(config.getDatabase());
+        talkRepository = new DatabaseTalkRepository(config.getDatabase());
     }
 
     @Override
     @Nonnull
     public Optional<JSONObject> getResource(@Nonnull String id) {
-        return eventRepository.retrieve(id).map(Event::toJSON);
+        return eventRepository.retrieve(id)
+                .map(e -> new JSONObject()
+                        .put("event", e.toJSON())
+                        .put("talks", new JSONArray(getTalks(e))));
+    }
+
+    private Collection<Object> getTalks(Event e) {
+        return talkRepository
+                .list(e.getId())
+                .stream().map(Talk::toJSON).collect(Collectors.toList());
     }
 
     @Override
@@ -49,8 +65,8 @@ public class EventApiController implements ResourceApi {
 
     @Override
     @Nonnull
-    public String createResource(@Nonnull JSONObject jsonObject) {
-        return String.valueOf(eventRepository.insert(toEvent(jsonObject.getJSONObject("event"))));
+    public Long createResource(@Nonnull JSONObject jsonObject) {
+        return eventRepository.insert(toEvent(jsonObject.getJSONObject("event")));
     }
 
     private Event toEvent(JSONObject eventJSON) {

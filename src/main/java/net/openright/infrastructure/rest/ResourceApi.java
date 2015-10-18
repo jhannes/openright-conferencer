@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public interface ResourceApi {
 
     @Nonnull
-    default String createResource(@Nonnull JSONObject jsonObject) {
+    default Object createResource(@Nonnull JSONObject jsonObject) {
         throw new UnsupportedOperationException();
     }
 

@@ -114,3 +114,12 @@ var events = (function() {
     update: update
   };
 })();
+
+var talks = (function() {
+  function save(data) {
+    return ajax.post('secure/talks', data);
+  }
+  return {
+    save: save
+  }
+})();

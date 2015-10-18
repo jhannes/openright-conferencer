@@ -82,7 +82,7 @@ public class JsonResourceController implements Controller {
         if (getResourceId(req) != null) {
             resourceApi.updateResource(getResourceId(req), jsonObject);
         } else {
-            String id = resourceApi.createResource(jsonObject);
+            String id = String.valueOf(resourceApi.createResource(jsonObject));
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.setHeader("Location", req.getRequestURL() + id);
         }

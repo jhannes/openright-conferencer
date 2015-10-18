@@ -245,7 +245,8 @@ public class Database {
                 try (PreparedStatement prepareStatement = conn.prepareStatement(query, generateKeys)) {
                     int index = 1;
                     for (Object object : parameters) {
-                        prepareStatement.setObject(index++, object);
+                        setParameter(prepareStatement, index, object);
+                        index += 1;
                     }
 
                     return statementCallback.run(prepareStatement);
@@ -253,7 +254,15 @@ public class Database {
             });
         } catch (SQLException e) {
             log.info("Error while executing {} {}", query, e);
-            throw handleException(e);
+            throw new RuntimeException(e.getMessage() + " on " + query);
+        }
+    }
+
+    public void setParameter(PreparedStatement stmt, int index, Object object) throws SQLException {
+        if (object instanceof Instant) {
+            stmt.setTimestamp(index, new Timestamp(((Instant)object).toEpochMilli()));
+        } else {
+            stmt.setObject(index, object);
         }
     }
 

@@ -1,0 +1,67 @@
+<div id="talkFormPlaceholder"></div>
+
+<script id="talkFormTemplate" type="template">
+<form onsubmit="talkView.create(event)">
+{{#with event}}
+	<p>Add a talk to the conference: {{title}}</p>
+
+	<input type="hidden" name="talk[event_id]" value="{{id}}" />
+	<input type="hidden" name="talk[creator]" value="{{@root.user.username}}" />
+
+	<label>
+		Title
+		<input type="text" name="talk[title]" required>
+	</label>
+
+	<label>
+		Speaker
+		<input type="text" name="talk[speaker]" placeholder="Or you can add one later" >
+	</label>
+
+	<label>
+		Description:
+		<textarea name="talk[description]"></textarea>
+	</label>
+
+
+	<h3>Topics covered</h3>
+	{{#each topics}}
+		<label>
+			<input type="checkbox" name="talk[topics][]" value="{{id}}">
+			{{title}}
+		</label>
+	{{/each}}
+
+
+{{/with}}
+	<button>Create talk</button>
+</form>
+</script>
+
+
+<script>
+var talkView = {
+  create: function(event) {
+    event.preventDefault();
+    talks.save($(event.target).serializeObject()).then(function() {
+      window.location.hash = "events/" + currentId();
+      notify("info", "Created");
+    });
+    return false;
+  }
+};
+
+$(function() {
+	var talkFormTemplate = Handlebars.compile($("#talkFormTemplate").html());
+	Promise.all([
+	             profile.get(),
+	             events.get(currentId())
+	             ])
+	.then(function(data) {
+		$("#talkFormPlaceholder").html(talkFormTemplate({
+		  user: data[0],
+		  event: data[1]
+	  	}));
+	});
+});
+</script>
