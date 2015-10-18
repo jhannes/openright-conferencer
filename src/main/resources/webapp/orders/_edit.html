@@ -96,7 +96,7 @@ $(function() {
 
     productRepository.list().then(function(data) {
       products = data.products;
-      if (currentId()) {
+      if (currentId() && currentId() != "new") {
         orderRepository.get(currentId()).then(function (order) {
           displayOrder(order, data.products);
         });

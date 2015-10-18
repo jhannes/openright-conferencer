@@ -25,7 +25,7 @@
 $(function() {
   var productFormTemplate = Handlebars.compile($("#productFormTemplate").html());
   
-  if (currentId()) {
+  if (currentId() && currentId() != "new") {
     productRepository.get(currentId()).then(function (product) {
       $("#productForm").html(productFormTemplate(product));
     });

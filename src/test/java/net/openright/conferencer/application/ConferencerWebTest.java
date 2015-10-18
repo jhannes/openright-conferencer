@@ -27,6 +27,7 @@ public class ConferencerWebTest {
     private static ConferencerTestServer server = new ConferencerTestServer(config);
     private static WebDriver browser;
     private static WebDriverWait wait;
+    private EventRepository eventRepository = new DatabaseEventRepository(config.getDatabase());
 
     @BeforeClass
     public static void startServer() throws Exception {
@@ -69,15 +70,14 @@ public class ConferencerWebTest {
 
     @Test
     public void shouldAddContributorToEvent() throws Exception {
-        EventRepository repository = new DatabaseEventRepository(config.getDatabase());
         UserProfile creator = SampleData.sampleProfile();
         Event event = SampleData.sampleEvent();
         try (AutoCloseable ignore = creator.setAsCurrent()) {
-            repository.insert(event);
+            eventRepository.insert(event);
         }
 
         browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
-        click(By.linkText(event.getTitle()));
+        click(By.linkText("update"));
         UserProfile collaborator = SampleData.sampleProfile();
         browser.findElement(By.name("event[collaborators][][email]")).sendKeys(collaborator.getEmail());
         browser.findElement(By.name("event[collaborators][][email]")).submit();
@@ -93,7 +93,7 @@ public class ConferencerWebTest {
     public void shouldAddEvent() throws Exception {
         browser.get(server.getURI() + "/simulateLogin?username=" + config.getTestUser());
 
-        click(By.id("newEvent"));
+        click(By.linkText("Create Event"));
         browser.findElement(By.name("event[title]"))
             .sendKeys("My test event");
         browser.findElement(By.name("event[title]"))
@@ -102,6 +102,25 @@ public class ConferencerWebTest {
         assertThat(browser.findElements(By.cssSelector("#events .event a")))
             .extracting(e -> e.getText())
             .contains("My test event");
+    }
+
+    @Test
+    public void shouldAddTalk() throws Exception {
+        UserProfile creator = SampleData.sampleProfile();
+        Event event = SampleData.sampleEvent();
+        try (AutoCloseable ignore = creator.setAsCurrent()) {
+            eventRepository.insert(event);
+        }
+
+        browser.get(server.getURI() + "/simulateLogin?username=" + config.getTestUser());
+        click(By.linkText(event.getTitle()));
+        click(By.linkText("Add talk"));
+        browser.findElement(By.name("event[collaborators][][email]"))
+            .sendKeys("A nice little talk");
+        browser.findElement(By.name("event[collaborators][][email]"))
+            .submit();
+
+
     }
 
     private void click(By by) {
