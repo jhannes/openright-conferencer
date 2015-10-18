@@ -60,7 +60,7 @@ $(function() {
 	.then(function(data) {
 		$("#talkFormPlaceholder").html(talkFormTemplate({
 		  user: data[0],
-		  event: data[1]
+		  event: data[1].event
 	  	}));
 	});
 });
