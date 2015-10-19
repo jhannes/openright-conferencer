@@ -29,11 +29,14 @@ public class TalkApiController implements ResourceApi {
         Talk talk = new Talk();
         talk.setEventId(talkJSON.getLong("event_id"));
         talk.setTitle(talkJSON.getString("title"));
-        talk.setTopicIds(convertLongArray(talkJSON.getJSONArray("topics")));
+        talk.setTopicIds(convertLongArray(talkJSON.optJSONArray("topics")));
         return talk;
     }
 
     private List<Long> convertLongArray(JSONArray jsonArray) {
+        if (jsonArray == null) {
+            return new ArrayList<>();
+        }
         ArrayList<Long> arrayList = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             arrayList.add(jsonArray.getLong(i));
