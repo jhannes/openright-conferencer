@@ -8,12 +8,16 @@ import org.junit.Test;
 import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.conferencer.application.ConferencerTestConfig;
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.talks.DatabaseTalkRepository;
+import net.openright.conferencer.domain.talks.Talk;
+import net.openright.conferencer.domain.talks.TalkRepository;
 import net.openright.infrastructure.test.SampleData;
 
 public class DatabaseEventRepositoryTest {
 
     private ConferencerConfig config = ConferencerTestConfig.instance();
     private EventRepository eventRepository = new DatabaseEventRepository(config.getDatabase());
+    private TalkRepository talkRepository = new DatabaseTalkRepository(config.getDatabase());
     private UserProfile userProfile = SampleData.sampleProfile();
 
     @Test
@@ -141,13 +145,12 @@ public class DatabaseEventRepositoryTest {
     public void shouldUpdateTopics() throws Exception {
         try (AutoCloseable ignore = userProfile.setAsCurrent()) {
             Event event = SampleData.sampleEvent();
-            eventRepository.insert(event);
 
             event.setTopics(Arrays.asList(
                     EventTopic.unsaved("old 1"),
                     EventTopic.unsaved("old 2"),
                     EventTopic.unsaved("old 3")));
-            eventRepository.update(event);
+            eventRepository.insert(event);
 
             Event event2 = eventRepository.retrieve(event.getSlug()).get();
             event2.setTopics(Arrays.asList(
@@ -162,4 +165,26 @@ public class DatabaseEventRepositoryTest {
                 .containsExactly("new 1", "new 2", "old 2", "old 1");
         }
     }
+
+    @Test
+    public void shouldSummarizeTalksPerTopic() throws Exception {
+        Event event = SampleData.sampleEventWithTopics(3);
+        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
+            eventRepository.insert(event);
+            event = eventRepository.retrieve(event.getSlug()).get();
+
+            for (int i=0; i<5; i++) {
+                Talk talk = SampleData.sampleTalk(event);
+                talk.setTopicIds(Arrays.asList(event.getTopics().get(0).getId()));
+                talkRepository.insert(talk);
+            }
+
+            assertThat(eventRepository.retrieve(event.getSlug()).get().getTopics())
+                .extracting(EventTopic::getTalkCount)
+                .containsExactly(5, 0, 0);
+        }
+    }
+
+
+
 }

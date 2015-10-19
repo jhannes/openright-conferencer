@@ -20,7 +20,7 @@ public class RequestException extends RuntimeException {
         return statusCode;
     }
 
-    public static Supplier<RequestException> notFound(String id) {
+    public static Supplier<RequestException> notFound(Object id) {
         return () -> new RequestException(401, "Not Found " + id);
     }
 

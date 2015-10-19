@@ -1,6 +1,7 @@
 package net.openright.conferencer.domain.events;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +47,16 @@ public class DatabaseEventRepository implements EventRepository {
     }
 
     private Collection<? extends EventTopic> listTopics(Long id) {
-        return eventTopicsTable
-                .where("event_id", id)
-                .orderBy("position")
-                .list(row -> new EventTopic(row.getLong("id"), row.getString("title")));
+        String query =
+                "select id, title, "
+                + "     (select count(*) from talk_topics where topic_id = t.id) as talk_count "
+                + "from event_topics t where event_id = ? "
+                + "order by position";
+        return database.queryForList(query, Arrays.asList(id), row -> {
+            EventTopic topic = new EventTopic(row.getLong("id"), row.getString("title"));
+            topic.setTalkCount(row.getInt("talk_count"));
+            return topic;
+        });
     }
 
     @Override
@@ -72,6 +79,7 @@ public class DatabaseEventRepository implements EventRepository {
         });
         event.setId(id);
         updateCollaborators(event);
+        insertTopics(event.getId(), event.getTopics());
         return id;
     }
 

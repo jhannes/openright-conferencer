@@ -1,10 +1,14 @@
 package net.openright.infrastructure.rest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Tainted;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @SuppressWarnings("unused")
@@ -27,5 +31,13 @@ public interface ResourceApi {
     @Nonnull
     default JSONObject listResources() {
         throw new UnsupportedOperationException();
+    }
+
+    default <T> List<T> convert(JSONArray jsonArray, Function<JSONObject, T> transformer) {
+        List<T> result = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            result.add(transformer.apply(jsonArray.getJSONObject(i)));
+        }
+        return result;
     }
 }

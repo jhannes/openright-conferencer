@@ -2,10 +2,17 @@ package net.openright.conferencer.domain.talks;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public interface TalkRepository {
 
-    Long insert(Talk talk);
+    @Nonnull
+    Long insert(@Nonnull Talk talk);
 
-    List<Talk> list(Long eventId);
+    @Nonnull
+    List<Talk> list(@Nonnull Long eventId);
+
+    @Nonnull
+    Talk retrieve(@Nonnull Long id);
 
 }

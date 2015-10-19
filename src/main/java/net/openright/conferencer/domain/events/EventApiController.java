@@ -1,10 +1,7 @@
 package net.openright.conferencer.domain.events;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -75,13 +72,5 @@ public class EventApiController implements ResourceApi {
         event.setSlug(eventJSON.getString("slug"));
         event.setCreatorProfile(UserProfile.getCurrent());
         return event;
-    }
-
-    private <T> List<T> convert(JSONArray jsonArray, Function<JSONObject, T> transformer) {
-        List<T> result = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            result.add(transformer.apply(jsonArray.getJSONObject(i)));
-        }
-        return result;
     }
 }

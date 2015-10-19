@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.annotation.Tainted;
 import javax.annotation.Untainted;
 
@@ -110,11 +111,12 @@ public class DatabaseTable {
 
         public List<String> sorts = new ArrayList<>();
 
+        @Nonnull
         public <T> List<T> list(Database.RowMapper<T> mapper) {
             return database.queryForList(createSelectQuery(), parameters, mapper);
         }
 
-        @Override
+        @Override @Nonnull
         protected String createSelectQuery() {
             return super.createSelectQuery() + " ORDER BY " + String.join(", ", sorts);
         }

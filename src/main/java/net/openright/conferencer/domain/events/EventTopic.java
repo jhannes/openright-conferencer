@@ -3,6 +3,7 @@ package net.openright.conferencer.domain.events;
 import org.json.JSONObject;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class EventTopic {
 
@@ -11,6 +12,9 @@ public class EventTopic {
 
     @Getter
     private String title;
+
+    @Getter @Setter
+    private Integer talkCount;
 
     public EventTopic(Long id, String title) {
         this.id = id;
@@ -26,7 +30,7 @@ public class EventTopic {
     }
 
     public JSONObject toJSON() {
-        return new JSONObject().put("id", id).put("title", title);
+        return new JSONObject().put("id", id).put("title", title).put("talk_count", talkCount);
     }
 
 }

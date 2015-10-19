@@ -2,6 +2,9 @@ package net.openright.conferencer.domain.talks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 
 import net.openright.conferencer.application.ConferencerConfig;
@@ -10,6 +13,7 @@ import net.openright.conferencer.application.profile.UserProfile;
 import net.openright.conferencer.domain.events.DatabaseEventRepository;
 import net.openright.conferencer.domain.events.Event;
 import net.openright.conferencer.domain.events.EventRepository;
+import net.openright.conferencer.domain.events.EventTopic;
 import net.openright.infrastructure.test.SampleData;
 
 public class DatabaseTalkRepositoryTest {
@@ -33,6 +37,28 @@ public class DatabaseTalkRepositoryTest {
                 .extracting(Talk::getTitle)
                 .contains(talk.getTitle());
         }
+    }
+
+    @Test
+    public void shouldSaveTalkTopics() throws Exception {
+        Event event = SampleData.sampleEventWithTopics(3);
+        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
+            eventRepository.insert(event);
+            event = eventRepository.retrieve(event.getSlug()).get();
+        }
+
+        Talk talk = SampleData.sampleTalk(event);
+        List<EventTopic> topics = event.getTopics();
+        talk.setTopicIds(Arrays.asList(
+                topics.get(0).getId(),
+                topics.get(2).getId()));
+        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
+            talkRepository.insert(talk);
+            assertThat(talkRepository.retrieve(talk.getId()).getTopicIds())
+                .containsOnly(topics.get(0).getId(), topics.get(2).getId());
+        }
+
+
     }
 
 }

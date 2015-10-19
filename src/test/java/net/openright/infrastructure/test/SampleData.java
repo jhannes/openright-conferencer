@@ -6,6 +6,7 @@ import java.util.Random;
 
 import net.openright.conferencer.application.profile.UserProfile;
 import net.openright.conferencer.domain.events.Event;
+import net.openright.conferencer.domain.events.EventTopic;
 import net.openright.conferencer.domain.talks.Talk;
 
 public class SampleData {
@@ -54,6 +55,16 @@ public class SampleData {
         talk.setTitle("A talk about " + sampleString(4));
         talk.setEventId(event.getId());
         return talk;
+    }
+
+    public static Event sampleEventWithTopics(int topicCount) {
+        Event event = sampleEvent();
+        List<EventTopic> topics = new ArrayList<>();
+        for (int i = 0; i < topicCount; i++) {
+            topics.add(EventTopic.unsaved("topic " + sampleWord() + " " + i));
+        }
+        event.setTopics(topics);
+        return event;
     }
 
 }
