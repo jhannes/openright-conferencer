@@ -15,4 +15,6 @@ public interface TalkRepository {
     @Nonnull
     Talk retrieve(@Nonnull Long id);
 
+    void update(@Nonnull Talk talk);
+
 }

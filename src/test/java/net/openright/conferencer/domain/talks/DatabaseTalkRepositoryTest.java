@@ -57,8 +57,25 @@ public class DatabaseTalkRepositoryTest {
             assertThat(talkRepository.retrieve(talk.getId()).getTopicIds())
                 .containsOnly(topics.get(0).getId(), topics.get(2).getId());
         }
+    }
 
+    @Test
+    public void shouldUpdateTalk() throws Exception {
+        Event event = SampleData.sampleEvent();
+        Talk talk;
+        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
+            eventRepository.insert(event);
+            talk = SampleData.sampleTalk(event);
+            talkRepository.insert(talk);
+            talk = talkRepository.retrieve(talk.getId());
+        }
 
+        talk.setSpeakerEmail("some@email.com");
+        talk.setTitle("new title");
+
+        talkRepository.update(talk);
+        assertThat(talkRepository.retrieve(talk.getId()))
+            .isEqualToIgnoringNullFields(talk);
     }
 
 }

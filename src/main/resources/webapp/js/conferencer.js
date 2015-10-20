@@ -116,10 +116,14 @@ var events = (function() {
 })();
 
 var talks = (function() {
-  function save(data) {
-    return ajax.post('secure/talks', data);
+  function get(ids) {
+    return ajax.get('secure/talks/' + ids[1]);
+  }
+  function save(data, ids) {
+    return ajax.post('secure/talks', data, ids ? ids[1] : null);
   }
   return {
+    get: get,
     save: save
   }
 })();

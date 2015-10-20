@@ -3,6 +3,8 @@ package net.openright.infrastructure.rest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,8 @@ import java.io.Writer;
 import java.util.Optional;
 
 public class JsonResourceController implements Controller {
+    private static Logger log = LoggerFactory.getLogger(JsonResourceController.class);
+
     private final ResourceApi resourceApi;
 
     public JsonResourceController(ResourceApi applicationApi) {
@@ -24,6 +28,7 @@ public class JsonResourceController implements Controller {
         try {
             doHandle(req, resp);
         } catch (JSONException e) {
+            log.warn("{}", req.getRequestURL(), e);
             throw new RequestException(400, e.getMessage());
         }
     }

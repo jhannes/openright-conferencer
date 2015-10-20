@@ -42,6 +42,17 @@ public class DatabaseTalkRepository implements TalkRepository {
     }
 
     @Override
+    public void update(@Nonnull Talk talk) {
+        // TODO Auto-generated method stub
+        table.where("id", talk.getId()).update(row -> {
+            row.put("title", talk.getTitle());
+            row.put("speaker_name", talk.getSpeakerName());
+            row.put("speaker_email", talk.getSpeakerEmail());
+        });
+
+    }
+
+    @Override
     @Nonnull
     public Talk retrieve(@Nonnull Long id) {
         Talk talk = table.where("id", id).single(this::toTalk)
@@ -68,8 +79,11 @@ public class DatabaseTalkRepository implements TalkRepository {
 
     private Talk toTalk(Database.Row row) throws SQLException {
         Talk talk = new Talk();
+        talk.setId(row.getLong("id"));
         talk.setEventId(row.getLong("event_id"));
         talk.setTitle(row.getString("title"));
+        talk.setSpeakerName(row.getString("speaker_name"));
+        talk.setSpeakerEmail(row.getString("speaker_email"));
         return talk;
     }
 }

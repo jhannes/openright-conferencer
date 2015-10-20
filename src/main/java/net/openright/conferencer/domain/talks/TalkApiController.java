@@ -2,6 +2,7 @@ package net.openright.conferencer.domain.talks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -23,6 +24,22 @@ public class TalkApiController implements ResourceApi {
     @Nonnull
     public Object createResource(@Nonnull JSONObject jsonObject) {
         return repository.insert(toTalk(jsonObject.getJSONObject("talk")));
+    }
+
+    @Override
+    public void updateResource(@Nonnull String id, @Nonnull JSONObject jsonObject) {
+        Talk talk = repository.retrieve(Long.valueOf(id));
+        talk.setTitle(jsonObject.getString("title"));
+        talk.setSpeakerEmail(jsonObject.getJSONObject("speaker").getString("email"));
+        talk.setSpeakerName(jsonObject.getJSONObject("speaker").getString("name"));
+        repository.update(talk);
+    }
+
+    @Override
+    @Nonnull
+    public Optional<JSONObject> getResource(@Nonnull String id) {
+        return Optional.of(
+                repository.retrieve(Long.valueOf(id)).toJSON());
     }
 
     private Talk toTalk(JSONObject talkJSON) {

@@ -104,27 +104,6 @@ public class ConferencerWebTest {
             .contains("My test event");
     }
 
-    @Test
-    public void shouldAddTalk() throws Exception {
-        UserProfile creator = SampleData.sampleProfile();
-        Event event = SampleData.sampleEvent();
-        try (AutoCloseable ignore = creator.setAsCurrent()) {
-            eventRepository.insert(event);
-        }
-
-        browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
-        click(By.linkText(event.getTitle()));
-        click(By.linkText("Add talk"));
-        browser.findElement(By.name("talk[title]"))
-            .sendKeys("A nice little talk");
-        browser.findElement(By.name("talk[title]"))
-            .submit();
-
-        assertThat(browser.findElements(By.cssSelector("#event_talks .event_talk")))
-            .extracting(e -> e.getText())
-            .contains("A nice little talk");
-    }
-
     private void click(By by) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading-overlay")));
         wait.until(ExpectedConditions.elementToBeClickable(by));

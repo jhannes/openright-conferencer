@@ -1,0 +1,60 @@
+<div id="talkPlaceholder"></div>
+
+<script id="talkTemplate" type="template">
+<form onsubmit="talkView.update(event)">
+	<h2>Update {{title}}</h2>
+
+	<input type="hidden" name="talk[id]" value="{{id}}" />
+
+	<label>
+		Title
+		<input type="text" name="talk[title]" value="{{title}}" required>
+	</label>
+
+	<label>
+		Speaker
+		<input type="text" name="talk[speaker][name]"
+			value="{{speaker.name}}"
+			placeholder="Or you can add one later" >
+	</label>
+
+	<label>
+		Speaker email
+		<input type="email" name="talk[speaker][email]"
+			value="{{speaker.email}}" 
+			placeholder="Or you can add one later" >
+	</label>
+
+	<label>
+		Description:
+		<textarea name="talk[description]">{{description}}</textarea>
+	</label>
+
+
+  <button>
+	Save
+  </botton>
+
+</form>
+</script>
+
+<script>
+var talkView = {
+    update: function(event) {
+      event.preventDefault();
+      var form = $(event.target).serializeObject();
+      talks.save(form.talk, currentIds()).then(function() {
+        window.location.hash = "events/" + currentIds()[0] + "/talks/" + currentIds()[1];    
+        notify("confirm", "Updated");        
+      });
+      return false;
+    }
+};
+
+$(function() {
+	var talkTemplate = Handlebars.compile($("#talkTemplate").html());
+	talks.get(currentIds()).then(function(data) {
+  		$("#talkPlaceholder").html(talkTemplate(data));
+	});
+});
+</script>
