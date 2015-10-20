@@ -4,8 +4,10 @@
 
 <script id="eventFormTemplate" type="template">
 <form onsubmit="updateEvent(event)">
-  <input type="hidden" name="event[slug]" value="{{slug}}" />
-  <h2>Update {{title}}</h2>
+  {{#with event}}
+    <input type="hidden" name="event[slug]" value="{{slug}}" />
+    <h2>Update {{title}}</h2>
+  {{/with}}
 
   <p>Let's do some modifications</p>
 

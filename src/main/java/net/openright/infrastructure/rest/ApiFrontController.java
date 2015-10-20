@@ -23,6 +23,8 @@ public abstract class ApiFrontController extends HttpServlet {
 
             getController(req).handle(req, resp);
         } catch (RequestException e) {
+            log.warn("{} {} {}: {}",
+                    resp.getStatus(), req.getMethod(), new RequestUrl(req), e.toString());
             resp.sendError(e.getStatusCode(), e.getMessage());
         } finally {
             long duration = System.currentTimeMillis() - startTime;

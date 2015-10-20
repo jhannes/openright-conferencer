@@ -34,6 +34,9 @@ public interface ResourceApi {
     }
 
     default <T> List<T> convert(JSONArray jsonArray, Function<JSONObject, T> transformer) {
+        if (jsonArray == null) {
+            return new ArrayList<>();
+        }
         List<T> result = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             result.add(transformer.apply(jsonArray.getJSONObject(i)));

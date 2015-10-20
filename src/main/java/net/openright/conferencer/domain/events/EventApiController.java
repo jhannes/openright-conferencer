@@ -51,7 +51,7 @@ public class EventApiController implements ResourceApi {
             for (int i = 0; i < collaborators.length(); i++) {
                 event.addCollaborator(collaborators.getJSONObject(i).getString("email"));
             }
-            event.setTopics(convert(eventJSON.getJSONArray("topics"), this::toEventTopic));
+            event.setTopics(convert(eventJSON.optJSONArray("topics"), this::toEventTopic));
             eventRepository.update(event);
         });
     }
