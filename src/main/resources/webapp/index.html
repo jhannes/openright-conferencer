@@ -95,8 +95,8 @@ var displayCurrentLocation = function(event) {
   if (event) {
     if (window.location.hash.startsWith("#./")) {
       var oldHash = event.originalEvent.oldURL.split('#')[1];
-      window.location.hash = oldHash + window.location.hash.substring(2);
-      return;
+      var newHash = oldHash + window.location.hash.substring(2);
+      history.replaceState(undefined, undefined, "#" + newHash);
     }
   }
   //$("#notifications .notify").fadeOut().empty();

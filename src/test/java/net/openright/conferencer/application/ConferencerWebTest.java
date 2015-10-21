@@ -91,7 +91,8 @@ public class ConferencerWebTest {
 
     @Test
     public void shouldAddEvent() throws Exception {
-        browser.get(server.getURI() + "/simulateLogin?username=" + config.getTestUser());
+        UserProfile creator = SampleData.sampleProfile();
+        browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
 
         click(By.linkText("Create Event"));
         browser.findElement(By.name("event[title]"))
