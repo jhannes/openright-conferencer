@@ -19,6 +19,8 @@ import net.openright.infrastructure.util.IOUtil;
 
 public class AuthServlet extends ApiFrontController {
 
+    private static final long serialVersionUID = -1332549808150067956L;
+
     public class ProfileController implements JSONSource {
         @Override
         @Nonnull

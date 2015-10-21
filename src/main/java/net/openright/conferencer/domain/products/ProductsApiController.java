@@ -47,6 +47,7 @@ public class ProductsApiController implements ResourceApi {
         repository.update(Long.valueOf(id), toProduct(jsonObject));
     }
 
+    @Nonnull
     private <T> JSONArray mapToJSON(List<T> list, Function<T, JSONObject> mapper) {
         return new JSONArray(list.stream().map(mapper).collect(Collectors.toList()));
     }

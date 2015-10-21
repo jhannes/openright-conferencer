@@ -22,6 +22,8 @@ import net.openright.infrastructure.rest.RequestException;
 
 public class ConferencerSecureFrontServlet extends ApiFrontController {
 
+    private static final long serialVersionUID = 5677329709881148525L;
+
     private static Logger log = LoggerFactory.getLogger(ConferencerSecureFrontServlet.class);
 
     private ConferencerConfig config;

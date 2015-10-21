@@ -16,6 +16,8 @@ public class ConferencerTestServer extends ConferencerServer {
 
     public class LoginSimulator extends HttpServlet {
 
+        private static final long serialVersionUID = -1826254683572852295L;
+
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             UserProfile userProfile = new UserProfile();

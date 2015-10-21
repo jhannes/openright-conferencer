@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.openright.conferencer.application.profile.UserProfile;
 import net.openright.conferencer.domain.events.Event;
 import net.openright.conferencer.domain.events.EventTopic;
 import net.openright.conferencer.domain.talks.Talk;
 
+@ParametersAreNonnullByDefault
 public class SampleData {
 
     private static Random random = new Random();
 
+    @SuppressWarnings("null")
+    @Nonnull
     public static String sampleString(int numberOfWords) {
         List<String> words = new ArrayList<String>();
         for (int i = 0; i < numberOfWords; i++) {

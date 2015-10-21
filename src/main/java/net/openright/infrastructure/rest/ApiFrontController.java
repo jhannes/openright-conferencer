@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public abstract class ApiFrontController extends HttpServlet {
+    private static final long serialVersionUID = 9193278278046481897L;
     private static Logger log = LoggerFactory.getLogger(ApiFrontController.class);
 
 

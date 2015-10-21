@@ -1,13 +1,5 @@
 package net.openright.infrastructure.config;
 
-import com.sun.istack.internal.Nullable;
-import com.zaxxer.hikari.HikariDataSource;
-import org.flywaydb.core.Flyway;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +8,16 @@ import java.util.Dictionary;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
+
+import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 public abstract class AppConfigFile {
 
@@ -61,7 +63,7 @@ public abstract class AppConfigFile {
     }
 
     @Nonnull
-    protected DataSource migrateDataSource(String prefix, DataSource dataSource) {
+    protected DataSource migrateDataSource(String prefix, @Nonnull DataSource dataSource) {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.setLocations("classpath:db/" + prefix);

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 
 public class ConferencerFrontServlet extends ApiFrontController {
 
+    private static final long serialVersionUID = 7008999381958960453L;
     private ConferencerConfig config;
 
     @Override
