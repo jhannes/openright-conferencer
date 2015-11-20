@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-
 import net.openright.conferencer.application.ConferencerConfig;
 import net.openright.conferencer.application.ConferencerTestConfig;
 import net.openright.conferencer.application.profile.UserProfile;
@@ -25,50 +24,39 @@ public class DatabaseTalkRepositoryTest {
 
     @Test
     public void shouldFindSavedTalks() throws Exception {
-        Event event = SampleData.sampleEvent();
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            eventRepository.insert(event);
-        }
+        Event event = SampleData.sampleEvent(userProfile);
+        eventRepository.insert(event);
 
         Talk talk = SampleData.sampleTalk(event);
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            talkRepository.insert(talk);
-            assertThat(talkRepository.list(event.getId()))
-                .extracting(Talk::getTitle)
-                .contains(talk.getTitle());
-        }
+        talkRepository.insert(talk);
+        assertThat(talkRepository.list(event.getId()))
+            .extracting(Talk::getTitle)
+            .contains(talk.getTitle());
     }
 
     @Test
     public void shouldSaveTalkTopics() throws Exception {
-        Event event = SampleData.sampleEventWithTopics(3);
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            eventRepository.insert(event);
-            event = eventRepository.retrieve(event.getSlug()).get();
-        }
+        Event event = SampleData.sampleEventWithTopics(userProfile, 3);
+        eventRepository.insert(event);
+        event = eventRepository.retrieve(event.getSlug(), userProfile).get();
 
         Talk talk = SampleData.sampleTalk(event);
         List<EventTopic> topics = event.getTopics();
         talk.setTopicIds(Arrays.asList(
                 topics.get(0).getId(),
                 topics.get(2).getId()));
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            talkRepository.insert(talk);
-            assertThat(talkRepository.retrieve(talk.getId()).getTopicIds())
-                .containsOnly(topics.get(0).getId(), topics.get(2).getId());
-        }
+        talkRepository.insert(talk);
+        assertThat(talkRepository.retrieve(talk.getId()).getTopicIds())
+            .containsOnly(topics.get(0).getId(), topics.get(2).getId());
     }
 
     @Test
     public void shouldUpdateTalk() throws Exception {
-        Event event = SampleData.sampleEvent();
-        Talk talk;
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            eventRepository.insert(event);
-            talk = SampleData.sampleTalk(event);
-            talkRepository.insert(talk);
-            talk = talkRepository.retrieve(talk.getId());
-        }
+        Event event = SampleData.sampleEvent(userProfile);
+        eventRepository.insert(event);
+        Talk talk = SampleData.sampleTalk(event);
+        talkRepository.insert(talk);
+        talk = talkRepository.retrieve(talk.getId());
 
         talk.setSpeakerEmail("some@email.com");
         talk.setTitle("new title");
@@ -77,6 +65,5 @@ public class DatabaseTalkRepositoryTest {
         assertThat(talkRepository.retrieve(talk.getId()))
             .isEqualToComparingFieldByField(talk);
     }
-
 
 }

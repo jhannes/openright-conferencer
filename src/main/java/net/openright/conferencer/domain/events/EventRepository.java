@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+import net.openright.conferencer.application.profile.UserProfile;
+
 public interface EventRepository {
 
     long insert(@Nonnull Event event);
@@ -12,7 +14,13 @@ public interface EventRepository {
     Collection<Event> list();
 
     @Nonnull
+    Collection<Event> list(UserProfile userProfile);
+
+    @Nonnull
     Optional<Event> retrieve(String slug);
+
+    @Nonnull
+    Optional<Event> retrieve(String slug, UserProfile userProfile);
 
     void update(@Nonnull Event event);
 

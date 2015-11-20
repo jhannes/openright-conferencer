@@ -30,7 +30,7 @@ public class EventApiController implements ResourceApi {
     @Override
     @Nonnull
     public Optional<JSONObject> getResource(@Nonnull String id) {
-        return eventRepository.retrieve(id)
+        return eventRepository.retrieve(id, UserProfile.getCurrent())
                 .map(e -> new JSONObject()
                         .put("event", e.toJSON())
                         .put("talks", new JSONArray(getTalks(e))));
@@ -46,7 +46,7 @@ public class EventApiController implements ResourceApi {
     public void updateResource(@Nonnull String id, @Nonnull JSONObject jsonObject) {
         JSONObject eventJSON = jsonObject.getJSONObject("event");
         eventRepository.doInTransaction(() -> {
-            Event event = eventRepository.retrieve(id).orElseThrow(RequestException.notFound(id));
+            Event event = eventRepository.retrieve(id, UserProfile.getCurrent()).orElseThrow(RequestException.notFound(id));
             JSONArray collaborators = eventJSON.getJSONArray("collaborators");
             for (int i = 0; i < collaborators.length(); i++) {
                 event.addCollaborator(collaborators.getJSONObject(i).getString("email"));

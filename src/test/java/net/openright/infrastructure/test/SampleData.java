@@ -50,8 +50,9 @@ public class SampleData {
         return sampleWord() + "." + sampleWord() + "@" + sampleWord() + ".com";
     }
 
-    public static Event sampleEvent() {
+    public static Event sampleEvent(UserProfile creator) {
         Event event = new Event();
+        event.setCreator(creator.getEmail());
         event.setTitle(sampleString(4));
         event.setSlug(sampleWord() + "-" + sampleWord() + "-" + random.nextInt(1000));
         return event;
@@ -64,8 +65,8 @@ public class SampleData {
         return talk;
     }
 
-    public static Event sampleEventWithTopics(int topicCount) {
-        Event event = sampleEvent();
+    public static Event sampleEventWithTopics(UserProfile userProfile, int topicCount) {
+        Event event = sampleEvent(userProfile);
         List<EventTopic> topics = new ArrayList<>();
         for (int i = 0; i < topicCount; i++) {
             topics.add(EventTopic.unsaved("topic " + sampleWord() + " " + i));

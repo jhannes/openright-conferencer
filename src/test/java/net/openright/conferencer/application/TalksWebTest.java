@@ -63,10 +63,8 @@ public class TalksWebTest {
     @Test
     public void shouldAddTalk() throws Exception {
         UserProfile creator = SampleData.sampleProfile();
-        Event event = SampleData.sampleEvent();
-        try (AutoCloseable ignore = creator.setAsCurrent()) {
-            eventRepository.insert(event);
-        }
+        Event event = SampleData.sampleEvent(creator);
+        eventRepository.insert(event);
 
         browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
         click(By.linkText(event.getTitle()));
@@ -84,13 +82,10 @@ public class TalksWebTest {
     @Test
     public void shouldEditTalk() throws Exception {
         UserProfile creator = SampleData.sampleProfile();
-        Event event = SampleData.sampleEvent();
-        Talk talk;
-        try (AutoCloseable ignore = creator.setAsCurrent()) {
-            eventRepository.insert(event);
-            talk = SampleData.sampleTalk(event);
-            talkRepository.insert(talk);
-        }
+        Event event = SampleData.sampleEvent(creator);
+        eventRepository.insert(event);
+        Talk talk = SampleData.sampleTalk(event);
+        talkRepository.insert(talk);
 
         browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
         click(By.linkText(event.getTitle()));
@@ -113,14 +108,11 @@ public class TalksWebTest {
     public void shouldCommentOnTalk() throws Exception {
         UserProfile creator = SampleData.sampleProfile();
         UserProfile commentor = SampleData.sampleProfile();
-        Event event = SampleData.sampleEvent();
+        Event event = SampleData.sampleEvent(creator);
         event.addCollaborator(commentor.getEmail());
-        Talk talk;
-        try (AutoCloseable ignore = creator.setAsCurrent()) {
-            eventRepository.insert(event);
-            talk = SampleData.sampleTalk(event);
-            talkRepository.insert(talk);
-        }
+        eventRepository.insert(event);
+        Talk talk = SampleData.sampleTalk(event);
+        talkRepository.insert(talk);
 
         browser.get(server.getURI() + "/simulateLogin?username=" + commentor.getEmail());
         click(By.linkText(event.getTitle()));

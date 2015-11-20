@@ -31,7 +31,7 @@ public class ProfileApiController implements JSONSource {
     }
 
     private Collection<Object> getEvents() {
-        return eventRepository.list().stream()
+        return eventRepository.list(UserProfile.getCurrent()).stream()
                 .map(e -> e.toJSON())
                 .collect(Collectors.toList());
     }

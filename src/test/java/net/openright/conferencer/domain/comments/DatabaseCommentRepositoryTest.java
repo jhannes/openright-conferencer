@@ -26,10 +26,8 @@ public class DatabaseCommentRepositoryTest {
 
     @Test
     public void shouldListCommentsForTalk() throws Exception {
-        Event event = SampleData.sampleEvent();
-        try(AutoCloseable setAsCurrent = userProfile.setAsCurrent()) {
-            eventRepository.insert(event);
-        }
+        Event event = SampleData.sampleEvent(userProfile);
+        eventRepository.insert(event);
 
         Talk talk = SampleData.sampleTalk(event);
         talkRepository.insert(talk);

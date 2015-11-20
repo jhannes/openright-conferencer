@@ -71,10 +71,8 @@ public class ConferencerWebTest {
     @Test
     public void shouldAddContributorToEvent() throws Exception {
         UserProfile creator = SampleData.sampleProfile();
-        Event event = SampleData.sampleEvent();
-        try (AutoCloseable ignore = creator.setAsCurrent()) {
-            eventRepository.insert(event);
-        }
+        Event event = SampleData.sampleEvent(creator);
+        eventRepository.insert(event);
 
         browser.get(server.getURI() + "/simulateLogin?username=" + creator.getEmail());
         click(By.linkText("update"));

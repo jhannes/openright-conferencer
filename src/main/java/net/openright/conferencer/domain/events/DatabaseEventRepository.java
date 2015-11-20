@@ -36,10 +36,16 @@ public class DatabaseEventRepository implements EventRepository {
     @Override
     @Nonnull
     public Optional<Event> retrieve(String slug) {
+        return retrieve(slug, UserProfile.getCurrent());
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Event> retrieve(String slug, UserProfile userProfile) {
         Optional<Event> event = eventsTable
                 .innerJoin(eventsCollaboratorTable, "event_id", "id")
                 .where("slug", slug)
-                .where("collaborator_email", UserProfile.getCurrent().getEmail())
+                .where("collaborator_email", userProfile.getEmail())
                 .single(this::toEvent);
         event.ifPresent(e -> e.getCollaborators().addAll(listCollaborators(e.getId())));
         event.ifPresent(e -> e.getTopics().addAll(listTopics(e.getId())));
@@ -62,16 +68,21 @@ public class DatabaseEventRepository implements EventRepository {
     @Override
     @Nonnull
     public Collection<Event> list() {
+        return list(UserProfile.getCurrent());
+    }
+
+    @Override
+    @Nonnull
+    public Collection<Event> list(UserProfile userProfile) {
         return eventsTable
                 .innerJoin(eventsCollaboratorTable, "event_id", "id")
-                .where("collaborator_email", UserProfile.getCurrent().getEmail())
+                .where("collaborator_email", userProfile.getEmail())
                 .orderBy("title")
                 .list(this::toEvent);
     }
 
     @Override
     public long insert(@Nonnull Event event) {
-        event.setCreator(UserProfile.getCurrent().getEmail());
         long id = eventsTable.insert(row -> {
             row.put("slug", event.getSlug());
             row.put("title", event.getTitle());
