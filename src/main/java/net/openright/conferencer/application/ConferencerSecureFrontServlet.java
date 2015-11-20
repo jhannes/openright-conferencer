@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import net.openright.conferencer.application.profile.ProfileApiController;
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.comments.CommentApiController;
 import net.openright.conferencer.domain.events.EventApiController;
 import net.openright.conferencer.domain.talks.TalkApiController;
 import net.openright.infrastructure.rest.ApiFrontController;
@@ -61,6 +62,7 @@ public class ConferencerSecureFrontServlet extends ApiFrontController {
             case "profile": return new GetJSONController(new ProfileApiController(config));
             case "events": return new JsonResourceController(new EventApiController(config));
             case "talks": return new JsonResourceController(new TalkApiController(config));
+            case "comments": return new JsonResourceController(new CommentApiController(config));
             default: return null;
         }
     }

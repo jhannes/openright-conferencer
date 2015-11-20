@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.openright.conferencer.application.profile.UserProfile;
+import net.openright.conferencer.domain.comments.Comment;
 import net.openright.conferencer.domain.events.Event;
 import net.openright.conferencer.domain.events.EventTopic;
 import net.openright.conferencer.domain.talks.Talk;
@@ -71,6 +72,15 @@ public class SampleData {
         }
         event.setTopics(topics);
         return event;
+    }
+
+    public static Comment sampleComment(Talk talk, UserProfile userProfile) {
+        Comment comment = new Comment();
+        comment.setAuthor(userProfile.getEmail());
+        comment.setTalkId(talk.getId());
+        comment.setTitle(sampleString(3));
+        comment.setContent(sampleString(10));
+        return comment;
     }
 
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 public class TalkComment {
     @Getter @Setter
-    private String title, user;
+    private String title, author;
 
 
 }

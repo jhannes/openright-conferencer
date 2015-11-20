@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -25,7 +26,9 @@ import net.openright.conferencer.domain.talks.TalkComment;
 import net.openright.conferencer.domain.talks.TalkRepository;
 import net.openright.infrastructure.test.SampleData;
 import net.openright.infrastructure.test.WebTestUtil;
+import net.openright.infrastructure.test.WebTests;
 
+@Category(WebTests.class)
 public class TalksWebTest {
 
     private static ConferencerTestConfig config = ConferencerTestConfig.instance();
@@ -100,6 +103,8 @@ public class TalksWebTest {
         browser.findElement(By.name("talk[speaker][email]")).sendKeys(speakerEmail);
         browser.findElement(By.name("talk[speaker][email]")).submit();
 
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".notify.confirm")));
+
         assertThat(talkRepository.retrieve(talk.getId()).getSpeakerEmail())
             .isEqualTo(speakerEmail);
     }
@@ -126,11 +131,13 @@ public class TalksWebTest {
         browser.findElement(By.name("comment[content]")).sendKeys("Here is some more input");
         browser.findElement(By.name("comment[title]")).submit();
 
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".notify.confirm")));
+
         List<TalkComment> comments = talkRepository.retrieve(talk.getId()).getComments();
-        assertThat(comments).extracting(TalkComment::getUser)
+        assertThat(comments).extracting(TalkComment::getAuthor)
             .contains(commentor.getEmail());
         assertThat(comments).extracting(TalkComment::getTitle)
-            .contains("Some some input");
+            .contains("Some input");
     }
 
     private void click(By by) {

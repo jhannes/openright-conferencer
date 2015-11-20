@@ -127,3 +127,14 @@ var talks = (function() {
     save: save
   }
 })();
+
+var comments = (function() {
+  function save(data, ids) {
+    data.event_id = ids[0];
+    data.talk_id = ids[1];
+    return ajax.post('secure/comments', data);
+  }
+  return {
+    save: save
+  }
+})();

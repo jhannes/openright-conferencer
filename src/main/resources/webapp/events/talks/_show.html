@@ -5,20 +5,48 @@
 
 	<h3>Information about the talk</h3>
 
+	<p>Speaker: {{speaker_name}} &lt;{{speaker_email}}&gt;</p>
+
 	<a href="#./edit">Update talk</a>
 
 	<h3>Comments</h3>
 
 
-	<a href="#">Add comment</a>
-
+	<a onclick="showCommentForm(event)" href="#">Add comment</a>
 </script>
 
+<div id="commentForm" class="hidden">
+    <form onsubmit="postComment(event)">
+        <label> Comment title: <input type="text" name="comment[title]" required>
+        </label> <label> Comment contents: <textarea name="comment[content]" required></textarea>
+        </label>
+
+        <button>Submit</button>
+    </form>
+</div>
+
+
 <script>
-$(function() {
-	var talkFormTemplate = Handlebars.compile($("#talkFormTemplate").html());
-	talks.get(currentIds()).then(function(data) {
-  		$("#talkFormPlaceholder").html(talkFormTemplate(data));
-	});
-});
+  function showCommentForm(event) {
+    event.preventDefault();
+    $("#commentForm").toggle();
+    return false;
+  }
+
+  function postComment(event) {
+    event.preventDefault();
+    var form = $(event.target).serializeObject();
+    comments.save(form.comment, currentIds()).then(function() {
+      $("#commentForm").hide();
+      notify("confirm", "Updated");
+    });
+    return false;
+  }
+
+  $(function() {
+    var talkFormTemplate = Handlebars.compile($("#talkFormTemplate").html());
+    talks.get(currentIds()).then(function(data) {
+      $("#talkFormPlaceholder").html(talkFormTemplate(data));
+    });
+  });
 </script>

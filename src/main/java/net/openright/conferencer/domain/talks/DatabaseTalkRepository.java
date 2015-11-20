@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import net.openright.conferencer.domain.comments.DatabaseCommentRepository;
 import net.openright.infrastructure.db.Database;
 import net.openright.infrastructure.rest.RequestException;
 import net.openright.lib.db.DatabaseTable;
@@ -14,10 +15,12 @@ public class DatabaseTalkRepository implements TalkRepository {
 
     private DatabaseTable table;
     private DatabaseTable talkTopicsTable;
+    private DatabaseCommentRepository commentsRepository;
 
     public DatabaseTalkRepository(Database database) {
         this.table = new DatabaseTable(database, "talks");
         this.talkTopicsTable = new DatabaseTable(database, "talk_topics");
+        this.commentsRepository = new DatabaseCommentRepository(database);
     }
 
     @Override
@@ -43,7 +46,6 @@ public class DatabaseTalkRepository implements TalkRepository {
 
     @Override
     public void update(@Nonnull Talk talk) {
-        // TODO Auto-generated method stub
         table.where("id", talk.getId()).update(row -> {
             row.put("title", talk.getTitle());
             row.put("speaker_name", talk.getSpeakerName());
@@ -58,8 +60,13 @@ public class DatabaseTalkRepository implements TalkRepository {
         Talk talk = table.where("id", id).single(this::toTalk)
                 .orElseThrow(RequestException.notFound(id));
         talk.setTopicIds(listTalkTopics(id));
+        talk.setComments(listTalkComments(id));
         return talk;
 
+    }
+
+    private List<TalkComment> listTalkComments(Long id) {
+        return commentsRepository.listTalkComments(id);
     }
 
     private List<Long> listTalkTopics(Long id) {

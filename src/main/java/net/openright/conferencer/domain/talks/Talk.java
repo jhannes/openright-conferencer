@@ -21,12 +21,14 @@ public class Talk {
     @Getter @Setter
     private List<Long> topicIds = new ArrayList<>();
 
-    @Getter
+    @Getter @Setter
     private List<TalkComment> comments = new ArrayList<>();
 
     public JSONObject toJSON() {
         return new JSONObject()
                 .put("id", id)
+                .put("speaker_email", speakerEmail)
+                .put("speaker_name", speakerName)
                 .put("title", title);
     }
 

@@ -75,7 +75,8 @@ public class DatabaseTalkRepositoryTest {
 
         talkRepository.update(talk);
         assertThat(talkRepository.retrieve(talk.getId()))
-            .isEqualToIgnoringNullFields(talk);
+            .isEqualToComparingFieldByField(talk);
     }
+
 
 }
